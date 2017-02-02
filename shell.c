@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MEM_SIZE 32
 #define STR_LEN 512
 
 void read_from_console();
