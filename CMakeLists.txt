@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 2.8)
 project(cs210_sem2)
 
 set(CMAKE_C_STANDARD 11)
 
-set(SOURCE_FILES main.c)
+set(SOURCE_FILES shell.c)
 add_executable(cs210_sem2 ${SOURCE_FILES})
 
 set_target_properties( cs210_sem2
