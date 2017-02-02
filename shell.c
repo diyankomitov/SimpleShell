@@ -26,6 +26,10 @@ void read_from_console(){
 		if (strcmp(input,"exit") == 0){
 			return;
 		}
+		else if (feof(stdin)) {
+			printf("\n");
+			return;
+		}
 	}
 }
 
