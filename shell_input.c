@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define STR_LEN 512
+#define INPUT_LEN 512
 
 void read_from_console() {
-	char input[STR_LEN+1]; 		// +1 to hold '\0' character
+	char input[INPUT_LEN+1]; 		// +1 to hold '\0' character
 	while(1){
 		printf("> ");
-		fgets(input, STR_LEN+2, stdin);		// +2 since fgets adds an extra '\n' char which we remove later
+		fgets(input, INPUT_LEN+2, stdin);		// +2 since fgets adds an extra '\n' char which we remove later
 
 		
 		if (feof(stdin)) {		// if Ctrl+D which gives EOF, exit
