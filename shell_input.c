@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #define STR_LEN 512
 
-/*
- * Reads user input from the console
- */
 void read_from_console() {
 	char input[STR_LEN+1]; 		// +1 to hold '\0' character
 	while(1){
@@ -35,12 +32,6 @@ void read_from_console() {
 	}
 }
 
-/*
- * Parses an input string, splits it
- * into smaller tokens and prints them out.
- * Parameteres:
- *		input: the input string to be parsed.
- */
 void parse(char *input){
 	char *token = strtok(input, " ");		// currently only splits on space
 	while (token != NULL)
@@ -51,9 +42,6 @@ void parse(char *input){
 	}
 }
 
-/*
- * Clears stdin
- */
 void flush_stdin() {
 	int ch;
 	while ((ch = fgetc(stdin)) != EOF && ch != '\n') {}
