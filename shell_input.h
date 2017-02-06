@@ -1,10 +1,6 @@
 #ifndef SHELL_INPUT_HEADER
 #define SHELL_INPUT_HEADER
 
-/*
- * Reads user input from the console
- */
-void read_from_console();
 
 /*
  * Parses an input string, splits it
