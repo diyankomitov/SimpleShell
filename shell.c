@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <shell_input.h>
+#include <stdlib.h>
+
 #define INPUT_LEN 512
 
 void main(int argc, char * argv[])
@@ -14,8 +14,7 @@ void main(int argc, char * argv[])
 
 		
 		if (feof(stdin)) {		// if Ctrl+D which gives EOF, exit
-				printf("\n");
-				return;
+            exit(125);
 		}
 		else if (input[strlen(input)-1] != '\n')		// if input is too long it won't end in a '\n'
 		{
@@ -26,7 +25,7 @@ void main(int argc, char * argv[])
 			input[strlen(input)-1] = '\0';		// otherwise replace '\n' with '\0'
 
 			if (strcmp(input,"exit") == 0) {
-				return;
+				exit(125);
 			}
 
 			parse(input);

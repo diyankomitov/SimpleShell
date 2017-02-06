@@ -1,7 +1,6 @@
 #ifndef SHELL_INPUT_HEADER
 #define SHELL_INPUT_HEADER
 
-
 /*
  * Parses an input string, splits it
  * into smaller tokens and prints them out.
