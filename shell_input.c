@@ -8,17 +8,16 @@ void echo_input(char *input)
     {
         printf("'%s'\n", input);
 
-        input = strtok(NULL, " ");
+        input = strtok(NULL, " \t|><;&");
     }
-
 }
 
 void parse(char *input){
 
-	char *token = strtok(input, " ");		// currently only splits on space
+    char delimeters[] = {'\t', '|', '<', '>', ';', '&', ' '};
+	char *token = strtok(input, delimeters);		// currently only splits on space
 
 	echo_input(token);
-
 }
 
 void flush_stdin() {
