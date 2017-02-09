@@ -2,26 +2,17 @@
 #include <stdio.h>
 #include <string.h>
 
-void echo_input(char *input)
+void parse(char **output, char *input)
 {
-    while (input != NULL)
+    const char delimeters[8] = {'\t', '|', '<', '>', ';', '&', ' ', '\n'};
+	char *token = strtok(input, delimeters);       // splits first token
+    
+    int i= 0;
+    while (token != NULL)
     {
-        printf("'%s'\n", input);
+        output[i] = token;          // while there are tokens, add to output
+        i++;
 
-        input = strtok(NULL, " \t|><;&");
+        token = strtok(NULL, delimeters);       // keep splitting
     }
-}
-
-void parse(char *input){
-
-    char delimeters[] = {'\t', '|', '<', '>', ';', '&', ' '};
-	char *token = strtok(input, delimeters);		// currently only splits on space
-
-	echo_input(token);
-}
-
-void flush_stdin() {
-	int ch;
-	while ((ch = fgetc(stdin)) != EOF && ch != '\n') {}
-		//this will read and remove one character at a time from stdin until it reaches an EOF or a new line
 }
