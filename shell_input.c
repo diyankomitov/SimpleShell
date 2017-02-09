@@ -16,3 +16,13 @@ void parse(char **output, char *input)
         token = strtok(NULL, delimeters);       // keep splitting
     }
 }
+
+void echo_input(char **input)
+{
+	int i = 0;
+		while(input[i] != NULL)
+		{
+			printf("'%s'\n", input[i]);
+			i++;
+		}
+}

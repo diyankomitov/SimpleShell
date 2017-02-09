@@ -10,4 +10,6 @@
  */
 void parse(char **output, char *input);
 
+void echo_input(char **input);
+
 #endif

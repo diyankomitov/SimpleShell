@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 #define INPUT_LEN 512
-void echo_input(char **input);
 
 void main(int argc, char * argv[])
 {
@@ -26,12 +25,4 @@ void main(int argc, char * argv[])
 	}
 }
 
-void echo_input(char **input)
-{
-	int i = 0;
-		while(input[i] != NULL)
-		{
-			printf("'%s'\n", input[i]);
-			i++;
-		}
-}
+
