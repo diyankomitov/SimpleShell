@@ -14,7 +14,7 @@ void main(int argc, char * argv[])
 
 		
 		if (feof(stdin)) {		// if Ctrl+D which gives EOF, exit
-            exit(125);
+            exit(0);
 		}
 		else if (input[strlen(input)-1] != '\n')		// if input is too long it won't end in a '\n'
 		{
@@ -25,7 +25,7 @@ void main(int argc, char * argv[])
 			input[strlen(input)-1] = '\0';		// otherwise replace '\n' with '\0'
 
 			if (strcmp(input,"exit") == 0) {
-				exit(125);
+				exit(0);
 			}
 
 			parse(input);
