@@ -17,9 +17,8 @@ void main(int argc, char * argv[])
 		memset(tokens, 0, (INPUT_LEN/2));
 		parse(tokens, input);
 
-		echo_input(tokens);			// test, remove later
+//		echo_input(tokens);			// test, remove later
 
-		
 		if (feof(stdin) || strcmp(input,"exit") == 0) {		// if Ctrl+D which gives EOF or exit input, exit
             exit(0);
 		}	
