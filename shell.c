@@ -7,21 +7,25 @@
 
 void main(int argc, char * argv[])
 {
-	char input[INPUT_LEN+1]; 		// +1 to hold '\0' character
+    // +1 to hold '\0' character
+	char input[INPUT_LEN+1];
 
-	char* tokens[INPUT_LEN/2] = { NULL };		// declared every loop so that it is cleared from tokens
-	while(1){
+    // declared every loop so that it is cleared from tokens
+	char* input_tokens[INPUT_LEN/2] = { NULL };
+	while(1)
+    {
 		printf("> ");
-		fgets(input, INPUT_LEN+2, stdin);		// +2 since fgets adds an extra '\n' char which we remove later
+        // +2 since fgets adds an extra '\n' char which we remove later
+		fgets(input, INPUT_LEN+2, stdin);
 
-		memset(tokens, 0, (INPUT_LEN/2));
-		parse(tokens, input);
+		memset(input_tokens, 0, (INPUT_LEN/2));
+		parse(input_tokens, input);
 
-//		echo_input(tokens);			// test, remove later
+		echo_input(input_tokens);			// test, remove later
 
-		if (feof(stdin) || strcmp(input,"exit") == 0) {		// if Ctrl+D which gives EOF or exit input, exit
+        // if Ctrl+D which gives EOF or exit input, exit
+		if (feof(stdin) || strcmp(input,"exit") == 0)
             exit(0);
-		}	
 	}
 }
 
