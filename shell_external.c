@@ -1,13 +1,22 @@
 #include <shell_external.h>
+#include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 uint8_t exec_external(char** tokenized_command)
 {
-    //print command name
-    printf("'%s'\n", tokenized_command[0]);
+    __pid_t child_process_id = fork();
 
-    execvp(tokenized_command[0], tokenized_command);
+    if (child_process_id == 0)
+    {
+        execvp(tokenized_command[0], tokenized_command);
+    }
+    else
+    {
+        // wait for the fork execution finish
+        wait(NULL);
+    }
 
     return 1;
 }
