@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <shell_input.h>
 #include <stdlib.h>
+#include <shell_external.h>
 
 #define INPUT_LEN 512
 
@@ -21,7 +22,9 @@ void main(int argc, char * argv[])
 		memset(input_tokens, 0, (INPUT_LEN/2));
 		parse(input_tokens, input);
 
-		echo_input(input_tokens);			// test, remove later
+        exec_external(input_tokens);
+
+//		echo_input(input_tokens);			// test, remove later
 
         // if Ctrl+D which gives EOF or exit input, exit
 		if (feof(stdin) || strcmp(input,"exit") == 0)
