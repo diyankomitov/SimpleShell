@@ -30,7 +30,7 @@ void main(int argc, char * argv[])
         if (feof(stdin) || strcmp(input,"exit") == 0)
             exit(0);
 
-        exec_external(input_tokens);
+	    exec_external(input_tokens);
 	}
 }
 
