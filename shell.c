@@ -35,9 +35,11 @@ void main(int argc, char * argv[])
             setenv("PATH", env_save, 0);
             printf("\n");
             exit(0);
+
 		}
 		exec_list(input_tokens);
-		
+
+
 	}
 }
 
