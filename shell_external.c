@@ -19,24 +19,11 @@ void exec_external(char** tokenized_command)
     if (child_process_id == 0)
     {
         execvp(tokenized_command[0], tokenized_command);
-
-        exit(errno);
+		perror(tokenized_command[0]);
     }
     else
     {
-        signed int status;
-        wait(&status);
-
-        // http://man7.org/linux/man-pages/man3/errno.3.html
-	
-		char error_message[ERR_MESS_LENGTH];
-		strerror_r(status, error_message, ERR_MESS_LENGTH);
-
-        if (status == 512)
-			printf("Command not found\n");
-		else if (status != 0)
-			printf("%s\n", error_message );
-
+        wait(NULL);
     }
 
 }
