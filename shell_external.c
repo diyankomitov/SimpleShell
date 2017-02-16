@@ -7,7 +7,18 @@
 #include <errno.h>
 #include <string.h>
 
-#define ERR_MESS_LENGTH 400
+void exec_list(char** token){
+	if(strcmp(token[0], "getpath")== 0){
+		char* path = getenv("PATH");
+		printf("%s\n", path);
+	}
+	else if(strcmp(token[0], "setpath")== 0){
+		setenv("PATH", token[1], 0);
+	}
+	else{
+        exec_external(token);
+	}
+}
 
 void exec_external(char** tokenized_command)
 {
@@ -17,7 +28,7 @@ void exec_external(char** tokenized_command)
         return;
 
     if (child_process_id == 0)
-    {
+    {    	
         execvp(tokenized_command[0], tokenized_command);
 		perror(tokenized_command[0]);
     }
