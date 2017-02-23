@@ -13,16 +13,31 @@ void save_env(){
 	env_save = getenv("PATH");
 }
 void exec_list(char** token){
-	if(strcmp(token[0], "getpath")== 0){
+	if (feof(stdin)){        	
+		setenv("PATH", env_save, 1);
+		
+		printf("%s\n", getenv("PATH"));
+		exit(0);
+	}
+	else if (token[0]== NULL){
+		return;
+	}
+	
+	else if(strcmp(token[0], "getpath")== 0){
 		char* path = getenv("PATH");
 		printf("%s\n", path);
 	}
 	else if(strcmp(token[0], "setpath")== 0){
 		setenv("PATH", token[1], 1);
 	}
-	else if (feof(stdin) || strcmp(token[0],"exit") == 0){        	
+	else if (strcmp(token[0],"exit") == 0){
+		if (token[1] != NULL){
+			printf("Error: exit has no arguments\n");
+			return;
+		}        	
 		setenv("PATH", env_save, 1);
-	
+		
+		printf("%s\n", getenv("PATH"));
 		exit(0);
 	}
 	else {

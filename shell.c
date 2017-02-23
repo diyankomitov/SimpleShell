@@ -17,7 +17,7 @@ void main(int argc, char * argv[])
 	while(1)
     {
 		printf("> ");
-        /
+    
 		fgets(input, INPUT_LEN+2, stdin);
 
 		memset(input_tokens, 0, (INPUT_LEN/2));

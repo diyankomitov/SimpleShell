@@ -9,8 +9,11 @@ void parse(char **output, char *input)
 
     uint8_t i;
     char* token;
-    for (i = 0, token = strtok(input, delimeters); token != NULL; token = strtok(NULL, delimeters), i++)
+    
+    for (i = 0, token = strtok(input, delimeters); token != NULL; token = strtok(NULL, delimeters), i++){
         output[i] = token;
+    }
+	output[i] = NULL;
 }
 
 void echo_input(char **input)
