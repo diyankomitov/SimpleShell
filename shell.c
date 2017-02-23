@@ -9,14 +9,11 @@
 
 void main(int argc, char * argv[])
 {
-	
-
-	char input[INPUT_LEN+1];
-	
 	save_env();
-
-	char* input_tokens[INPUT_LEN/2] = { NULL };
 	chdir(getenv("HOME"));	
+
+	char input[INPUT_LEN+1];	
+	char* input_tokens[INPUT_LEN/2] = { NULL };
 
 	while(1)
     {
@@ -25,14 +22,9 @@ void main(int argc, char * argv[])
 		fgets(input, INPUT_LEN+2, stdin);
 
 		memset(input_tokens, 0, (INPUT_LEN/2));
+		
 		parse(input_tokens, input);
 
-        
-        
 		exec_list(input_tokens);
-
-
 	}
 }
-
-
