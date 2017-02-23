@@ -7,15 +7,25 @@
 #include <errno.h>
 #include <string.h>
 
+char* env_save;
+
+void save_env(){
+	env_save = getenv("PATH");
+}
 void exec_list(char** token){
 	if(strcmp(token[0], "getpath")== 0){
 		char* path = getenv("PATH");
 		printf("%s\n", path);
 	}
 	else if(strcmp(token[0], "setpath")== 0){
-		setenv("PATH", token[1], 0);
+		setenv("PATH", token[1], 1);
 	}
-	else{
+	else if (feof(stdin) || strcmp(token[0],"exit") == 0){        	
+		setenv("PATH", env_save, 1);
+	
+		exit(0);
+	}
+	else {
         exec_external(token);
 	}
 }
@@ -31,6 +41,7 @@ void exec_external(char** tokenized_command)
     {    	
         execvp(tokenized_command[0], tokenized_command);
 		perror(tokenized_command[0]);
+		exit(-1);
     }
     else
     {

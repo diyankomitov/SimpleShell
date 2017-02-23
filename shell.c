@@ -3,14 +3,14 @@
 #include <shell_input.h>
 #include <stdlib.h>
 #include <shell_external.h>
-
+#include <unistd.h>
 #define INPUT_LEN 512
 
 void main(int argc, char * argv[])
 {
     // +1 to hold '\0' character
 	char input[INPUT_LEN+1];
-	char* env_save = getenv("PATH");
+	save_env();
     // declared every loop so that it is cleared from tokens
 	char* input_tokens[INPUT_LEN/2] = { NULL };
 	char* env_home = getenv("HOME");
@@ -31,12 +31,7 @@ void main(int argc, char * argv[])
         // due to override reasions
         // we have to make sure none of the external command overlaps with the kernelcommands
         // kernelcommand > internal shell command
-        if (feof(stdin) || strcmp(input,"exit") == 0){        	
-            setenv("PATH", env_save, 0);
-            printf("\n");
-            exit(0);
-
-		}
+        
 		exec_list(input_tokens);
 
 
