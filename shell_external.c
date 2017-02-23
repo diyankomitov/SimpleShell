@@ -12,35 +12,49 @@ char* env_save;
 void save_env(){
 	env_save = getenv("PATH");
 }
-void exec_list(char** token){
-	if (feof(stdin)){        	
-		setenv("PATH", env_save, 1);
-		
-		printf("%s\n", getenv("PATH"));
-		exit(0);
+void exec_list(char** token)
+{
+	if (feof(stdin))
+	{        	
+		exit_cleanup();
 	}
-	else if (token[0]== NULL){
+	else if (token[0]== NULL)
+	{
 		return;
 	}
 	
-	else if(strcmp(token[0], "getpath")== 0){
-		char* path = getenv("PATH");
-		printf("%s\n", path);
-	}
-	else if(strcmp(token[0], "setpath")== 0){
-		setenv("PATH", token[1], 1);
-	}
-	else if (strcmp(token[0],"exit") == 0){
-		if (token[1] != NULL){
-			printf("Error: exit has no arguments\n");
+	else if(strcmp(token[0], "getpath")== 0)
+	{
+		if (token[1] != NULL)
+		{
+			printf("Error: getpath shouldn't have argument\n");
 			return;
 		}        	
-		setenv("PATH", env_save, 1);
-		
+
 		printf("%s\n", getenv("PATH"));
-		exit(0);
+	}
+	else if(strcmp(token[0], "setpath")== 0)
+	{
+		if (token[1] == NULL || token[2] != NULL)
+		{
+			printf("Error: setpath has to have only one argument\n");
+			return;
+		}        	
+
+		setenv("PATH", token[1], 1);
+	}
+	else if (strcmp(token[0],"exit") == 0)
+	{
+		if (token[1] != NULL)
+		{
+			printf("Error: exit shouldn't have arguments\n");
+			return;
+		}        	
+		exit_cleanup();
 	}
 	else {
+
+	
         exec_external(token);
 	}
 }
@@ -63,4 +77,12 @@ void exec_external(char** tokenized_command)
         wait(NULL);
     }
 
+}
+
+
+void exit_cleanup()
+{
+	setenv("PATH", env_save, 1);
+		
+	exit(0);
 }
