@@ -8,29 +8,22 @@
 
 void main(int argc, char * argv[])
 {
-    // +1 to hold '\0' character
 	char input[INPUT_LEN+1];
 	save_env();
-    // declared every loop so that it is cleared from tokens
 	char* input_tokens[INPUT_LEN/2] = { NULL };
 	char* env_home = getenv("HOME");
 	setenv("PATH", env_home, 0);
-	chdir(env_home);
-	
+	chdir(env_home);	
 	while(1)
     {
 		printf("> ");
-        // +2 since fgets adds an extra '\n' char which we remove later
+        /
 		fgets(input, INPUT_LEN+2, stdin);
 
 		memset(input_tokens, 0, (INPUT_LEN/2));
 		parse(input_tokens, input);
 
-        // if Ctrl+D which gives EOF or exit input, exit
-        // external shell commands should be handled before the internal ones.
-        // due to override reasions
-        // we have to make sure none of the external command overlaps with the kernelcommands
-        // kernelcommand > internal shell command
+        
         
 		exec_list(input_tokens);
 
