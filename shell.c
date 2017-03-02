@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <shell_input.h>
 #include <stdlib.h>
-#include <shell_external.h>
+#include <shell_commands.h>
 #include <unistd.h>
 
 #define INPUT_LEN 512

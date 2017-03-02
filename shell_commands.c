@@ -1,4 +1,4 @@
-#include <shell_external.h>
+#include <shell_commands.h>
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -12,6 +12,12 @@ char* env_save;
 void save_env()
 {
 	env_save = getenv("PATH");
+}
+
+void exit_cleanup()
+{
+    setenv("PATH", env_save, 1);
+    exit(0);
 }
 
 void exec_list(char** token)
@@ -84,8 +90,4 @@ void exec_external(char** tokenized_command)
     }
 }
 
-void exit_cleanup()
-{
-	setenv("PATH", env_save, 1);
-	exit(0);
-}
+
