@@ -15,6 +15,7 @@ const command_map commands[COMMAND_AMMOUNT] =
 {
 	{.name = "getpath", .callback = &get_path}
 	,{.name = "setpath", .callback = &set_path}
+	,{.name = "cd", .callback = &cd}
 	,{.name = "exit", .callback = &exit_shell}
 };
 
@@ -32,7 +33,10 @@ bool exec_internal(char** token)
     {
         for (uint8_t i = 0; i < COMMAND_AMMOUNT; i++)
             if (strcmp(commands[i].name, token[0]) == 0)
-                return commands[i].callback(token);
+            {
+            commands[i].callback(token);
+                return true;
+                }
     }
 
     return false;
@@ -83,6 +87,30 @@ bool set_path(char** parameters)
 	setenv("PATH", parameters[1], 1);
 	return true;
 }
+bool cd(char** token)
+{
+	if (token[1] == NULL)
+	{
+		chdir(getenv("HOME"));
+		
+	}
+	else if (token[2] == NULL)
+	{
+		
+		if(chdir(token[1])==-1)
+		{
+			perror(token[1]);
+		}
+	}
+	else
+	{
+		printf("Error: Invalid number of arguments\n");
+		return false;
+
+	} 
+	return true;
+}
+
 
 bool exit_shell(char** parameters)
 {
