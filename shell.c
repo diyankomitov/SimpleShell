@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <shell_commands.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define INPUT_LEN 512
 
@@ -25,6 +26,9 @@ void main(int argc, char * argv[])
 		
 		parse(input_tokens, input);
 
-		exec_list(input_tokens);
+		bool isSuccess = exec_internal(input_tokens);
+
+        if (isSuccess == false)
+            exec_external(input_tokens);
 	}
 }

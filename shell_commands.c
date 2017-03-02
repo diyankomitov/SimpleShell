@@ -6,75 +6,45 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
+#include "shell_commands.h"
 
 char* env_save;
+
+const command_map commands[COMMAND_AMMOUNT] =
+{
+	{.name = "getpath", .callback = &get_path}
+	,{.name = "setpath", .callback = &set_path}
+	,{.name = "exit", .callback = &exit_shell}
+};
 
 void save_env()
 {
 	env_save = getenv("PATH");
 }
 
-void exit_cleanup()
-{
-    setenv("PATH", env_save, 1);
-    exit(0);
-}
-
-void exec_list(char** token)
+bool exec_internal(char** token)
 {
 	if (feof(stdin))
-	{        	
-		exit_cleanup();
-	}
+		exit_shell(token);
 
-	else if (token[0]== NULL)
-	{
-		return;
-	}
+	if (token[0] != NULL)
+    {
+        for (uint8_t i = 0; i < COMMAND_AMMOUNT; i++)
+            if (strcmp(commands[i].name, token[0]) == 0)
+                return commands[i].callback(token);
+    }
 
-	else if (strcmp(token[0],"exit") == 0)
-	{
-		if (token[1] != NULL)
-		{
-			printf("Error: exit shouldn't have arguments\n");
-			return;
-		}
-		exit_cleanup();
-	}
-	
-	else if(strcmp(token[0], "getpath")== 0)
-	{
-		if (token[1] != NULL)
-		{
-			printf("Error: getpath shouldn't have argument\n");
-			return;
-		}
-		printf("%s\n", getenv("PATH"));
-	}
-
-	else if(strcmp(token[0], "setpath")== 0)
-	{
-		if (token[1] == NULL || token[2] != NULL)
-		{
-			printf("Error: setpath has to have only one argument\n");
-			return;
-		}
-		setenv("PATH", token[1], 1);
-	}
-
-	else
-	{
-        exec_external(token);
-	}
+    return false;
 }
 
-void exec_external(char** tokenized_command)
+bool exec_external(char** tokenized_command)
 {
     __pid_t child_process_id = fork();
 
     if (child_process_id < 0)
     {
-        return;
+        return false;
     }
 
     if (child_process_id == 0)
@@ -83,11 +53,47 @@ void exec_external(char** tokenized_command)
 		perror(tokenized_command[0]);
 		exit(-1);
     }
-
     else
     {
         wait(NULL);
+		return true;
     }
 }
 
+bool get_path(char** parameters)
+{
+	if (parameters[1] != NULL)
+	{
+		printf("Error: getpath shouldn't have argument\n");
+		return false;
+	}
 
+	printf("%s\n", getenv("PATH"));
+	return true;
+}
+
+bool set_path(char** parameters)
+{
+	if (parameters[1] == NULL || parameters[2] != NULL)
+	{
+		printf("Error: setpath has to have only one argument\n");
+		return false;
+	}
+
+	setenv("PATH", parameters[1], 1);
+	return true;
+}
+
+bool exit_shell(char** parameters)
+{
+	if (parameters[1] != NULL)
+	{
+		printf("Error: exit shouldn't have arguments\n");
+		return false;
+	}
+
+	setenv("PATH", env_save, 1);
+	exit(0);
+
+	return true;
+}
