@@ -19,7 +19,7 @@ const command_map commands[COMMAND_AMMOUNT];
 void save_env();
 bool exec_internal(char** token);
 bool exec_external(char** tokenized_command);
-bool cd(char** token);
+bool cd(char** parameters);
 bool exit_shell(char** parameters);
 bool get_path(char** parameters);
 bool set_path(char** parameters);

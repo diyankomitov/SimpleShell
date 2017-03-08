@@ -34,9 +34,9 @@ bool exec_internal(char** token)
         for (uint8_t i = 0; i < COMMAND_AMMOUNT; i++)
             if (strcmp(commands[i].name, token[0]) == 0)
             {
-            commands[i].callback(token);
-                return true;
-                }
+				commands[i].callback(token);
+				return true;
+			}
     }
 
     return false;
@@ -87,19 +87,15 @@ bool set_path(char** parameters)
 	setenv("PATH", parameters[1], 1);
 	return true;
 }
-bool cd(char** token)
+bool cd(char** parameters)
 {
-	if (token[1] == NULL)
+	if (parameters[2] == NULL)
 	{
-		chdir(getenv("HOME"));
+        char* dir = (parameters[1] == NULL)? getenv("HOME") : parameters[1];
 		
-	}
-	else if (token[2] == NULL)
-	{
-		
-		if(chdir(token[1])==-1)
+		if(chdir(dir) == -1)
 		{
-			perror(token[1]);
+			perror(parameters[1]);
 		}
 	}
 	else

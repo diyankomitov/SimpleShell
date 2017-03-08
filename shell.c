@@ -28,7 +28,7 @@ void main(int argc, char * argv[])
 
 		bool isSuccess = exec_internal(input_tokens);
 
-        if (isSuccess == false)
+        if (!isSuccess)
             exec_external(input_tokens);
 	}
 }
