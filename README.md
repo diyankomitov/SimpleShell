@@ -1,4 +1,4 @@
-# CS210 group shell project
+# CS210 group shell project (v0.1)
 
 developers
 
