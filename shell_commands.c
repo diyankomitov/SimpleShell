@@ -139,11 +139,32 @@ void save_history(char** input, histList* history){
 	
 } 
 
-void load_history(char* input_tokens[], histList* history){
-	printf("%s\n", history->command[history->num][0]);
+void load_history(char* input_tokens[], histList* history)
+{
+	if(input_tokens[1] != NULL)
+		return;
+
+	uint8_t number = history->num;
+	if (strcmp(input_tokens[0], "!!") == 0)
+	{
+		number = history->num;
+	}
+	else
+	{
+		/**
+		char subbuff[5];
+		memcpy( subbuff, &buff[10], 4 );
+		subbuff[4] = '\0';
+		
+		!-5
+		!5
+		*/
+	}
+	
+	printf("%s\n", history->command[number][0]);
 	int i;
-	for (i = 0; history->command[history->num][i]!= NULL; i++){
-		input_tokens[i] = history->command[history->num][i];
+	for (i = 0; history->command[number][i]!= NULL; i++){
+		input_tokens[i] = history->command[number][i];
 	}
 	input_tokens[i] = NULL;
 }
