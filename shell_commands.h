@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 #define COMMAND_AMMOUNT 4
+#define HIST_LEN 20
+#define INPUT_LEN 512
+
+typedef struct {
+	uint8_t num;
+	char* command[HIST_LEN][INPUT_LEN/2];
+} histList;
 
 typedef bool (*command)(char** parameters);
 
@@ -23,4 +30,6 @@ bool cd(char** token);
 bool exit_shell(char** parameters);
 bool get_path(char** parameters);
 bool set_path(char** parameters);
+void save_history(char** input, histList* history);
+void load_history(char** input_tokens, histList* history);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H
