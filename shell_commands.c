@@ -17,6 +17,7 @@ const command_map commands[COMMAND_AMMOUNT] =
 	,{.name = "setpath", .callback = &set_path}
 	,{.name = "cd", .callback = &cd}
 	,{.name = "exit", .callback = &exit_shell}
+	
 };
 
 void save_env()
@@ -117,7 +118,51 @@ bool exit_shell(char** parameters)
 	}
 
 	setenv("PATH", env_save, 1);
+	printf("%s\n", getenv("PATH"));
 	exit(0);
 
 	return true;
 }
+
+void save_history(char** input, histList* history){
+	history->num = (history->num + 1 > 4)? 0 : history->num +1;
+	int i;
+	for (i = 0; input[i]!= NULL; i++){
+		history->command[history->num][i] = strdup(input[i]);
+	}
+	
+	history->command[history->num][i] = NULL;
+	
+} 
+
+void load_history(char* input_tokens[], histList* history)
+{
+	if(input_tokens[1] != NULL)
+		return;
+
+	uint8_t number = history->num;
+	if (strcmp(input_tokens[0], "!!") == 0)
+	{
+		number = history->num;
+	}
+	else
+	{
+		/**
+		char subbuff[5];
+		memcpy( subbuff, &buff[10], 4 );
+		subbuff[4] = '\0';
+		
+		!-5
+		!5
+		*/
+	}
+	
+	printf("%s\n", history->command[number][0]);
+	int i;
+	for (i = 0; history->command[number][i]!= NULL; i++){
+		input_tokens[i] = history->command[number][i];
+	}
+	input_tokens[i] = NULL;
+}
+
+
