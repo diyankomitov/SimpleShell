@@ -10,6 +10,7 @@
 #include "shell_commands.h"
 
 char* env_save;
+histList history;
 
 const command_map commands[COMMAND_AMMOUNT] =
 {
@@ -17,12 +18,17 @@ const command_map commands[COMMAND_AMMOUNT] =
 	,{.name = "setpath", .callback = &set_path}
 	,{.name = "cd", .callback = &cd}
 	,{.name = "exit", .callback = &exit_shell}
-	
+	,{.name = "history", .callback = &print_history}
 };
 
 void save_env()
 {
 	env_save = getenv("PATH");
+}
+
+void load_history()
+{
+	history.num = 0;
 }
 
 bool exec_internal(char** token)
@@ -128,45 +134,87 @@ bool exit_shell(char** parameters)
 	return true;
 }
 
-void save_history(char** input, histList* history){
-	history->num = (history->num + 1 > 4)? 0 : history->num +1;
+void save_to_history(char** input_tokens){
+	history.num = (history.num + 1 > HIST_LEN)? 1 : history.num +1;
 	int i;
-	for (i = 0; input[i]!= NULL; i++){
-		history->command[history->num][i] = strdup(input[i]);
+	for (i = 0; input_tokens[i]!= NULL; i++){
+		history.command[history.num][i] = strdup(input_tokens[i]);
 	}
 	
-	history->command[history->num][i] = NULL;
-	
+	history.command[history.num][i] = NULL;
+	printf("history.num on save: %d\n", history.num);
 } 
 
-void load_history(char* input_tokens[], histList* history)
+void load_from_history(char* input_tokens[])
 {
 	if(input_tokens[1] != NULL)
-		return;
-
-	uint8_t number = history->num;
-	if (strcmp(input_tokens[0], "!!") == 0)
 	{
-		number = history->num;
+		printf("Error: invocation from history can't have any arguments\n");
+		return;
+	}
+
+	uint8_t number = history.num;
+
+	if (strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0)
+	{
+		number = history.num;
+	}
+	else if (input_tokens[0][1] == '-')
+	{
+		char temp[3];
+		memcpy(temp, &input_tokens[0][2], 2);
+		temp[3] = '\0';
+
+		uint8_t tempnum = atoi(temp);
+
+		if (strlen(input_tokens[0]) > 4 || tempnum == 0 || (number - tempnum) < 1)
+		{
+			printf("Error: Invalid history location given\n");
+			return;
+		}
+		else
+		{
+			number = number - tempnum;
+			//printf("!- number: %d\n", number);
+		}
 	}
 	else
 	{
-		/**
-		char subbuff[5];
-		memcpy( subbuff, &buff[10], 4 );
-		subbuff[4] = '\0';
-		
-		!-5
-		!5
-		*/
+		char temp[3];
+		memcpy(temp, &input_tokens[0][1], 2);
+		temp[3] = '\0';
+
+		uint8_t tempnum = atoi(temp);
+
+		if (strlen(input_tokens[0]) > 3 || tempnum == 0 || tempnum > number)
+		{
+			printf("Error: Invalid history location given\n");
+			return;
+		}
+		else
+		{
+			number = tempnum;
+			//printf("! number: %d\n", number);
+		}	
 	}
 	
-	printf("%s\n", history->command[number][0]);
+	//printf("%s\n", history->command[number][0]);
 	int i;
-	for (i = 0; history->command[number][i]!= NULL; i++){
-		input_tokens[i] = history->command[number][i];
+	for (i = 0; history.command[number][i]!= NULL; i++){
+		input_tokens[i] = history.command[number][i];
 	}
 	input_tokens[i] = NULL;
 }
 
-
+bool print_history(char** parameters)
+{
+	for (int i = 1; history.command[i][0] != NULL; i++)
+	{
+		printf("%d: ", i);
+		for (int j = 0; history.command[i][j]!= NULL; j++){
+			printf("%s ", history.command[i][j]);
+		}
+	printf("\n");
+	}
+	return true;
+}
