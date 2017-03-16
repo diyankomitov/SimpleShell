@@ -10,9 +10,8 @@
 void main(int argc, char * argv[])
 {
 	save_env();
-	chdir(getenv("HOME"));	
-	histList history;
-	history.num = 0;
+	chdir(getenv("HOME"));
+	load_history();
 	char input[INPUT_LEN+1];	
 	char* input_tokens[INPUT_LEN/2] = { NULL };
 
@@ -27,12 +26,12 @@ void main(int argc, char * argv[])
 		parse(input_tokens, input);
 		
 		if(input_tokens[0][0] != '!'){
-			printf("presave");
-			save_history(input_tokens, &history);
-			printf("save");
+			//printf("presave\n");
+			save_to_history(input_tokens);
+			//printf("save\n");
 		}
 		else {
-			load_history(input_tokens, &history);
+			load_from_history(input_tokens);
 			//printf("%s\n", input_tokens[0]);
 		}
 		bool isSuccess = exec_internal(input_tokens);
