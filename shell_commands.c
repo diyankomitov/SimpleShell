@@ -131,13 +131,14 @@ bool exit_shell(char** parameters)
 }
 
 void save_to_history(char** input_tokens){
-	history.num = (history.num + 1 > HIST_LEN)? 1 : history.num +1;
+	
 	int i;
 	for (i = 0; input_tokens[i]!= NULL; i++){
 		history.command[history.num][i] = strdup(input_tokens[i]);
 	}
 	
 	history.command[history.num][i] = NULL;
+	history.num = history.num = (history.num + 1)% HIST_LEN;
 	printf("history.num on save: %d\n", history.num);
 } 
 
@@ -204,15 +205,21 @@ void load_from_history(char* input_tokens[])
 
 bool print_history(char** parameters)
 {
-	for (uint8_t i = 0; i < HIST_LEN; i++)
+
+	uint8_t i = history.num;
+	uint8_t count = 0;
+	while(count < HIST_LEN)
     {
         uint8_t j = 0;
+       
         while (history.command[i][j] != NULL)
         {
-            printf("%s\n", history.command[i][j]);
+            printf("%d. %s\n", count, history.command[i][j]);
             j++;
         }
-
+        
+        i = (i+1)%HIST_LEN;
+        count++;
     }
 	return true;
 }
