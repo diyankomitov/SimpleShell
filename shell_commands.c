@@ -204,13 +204,15 @@ void load_from_history(char* input_tokens[])
 
 bool print_history(char** parameters)
 {
-	for (int i = 1; history.command[i][0] != NULL; i++)
-	{
-		printf("%d: ", i);
-		for (int j = 0; history.command[i][j]!= NULL; j++){
-			printf("%s ", history.command[i][j]);
-		}
-	printf("\n");
-	}
+	for (uint8_t i = 0; i < HIST_LEN; i++)
+    {
+        uint8_t j = 0;
+        while (history.command[i][j] != NULL)
+        {
+            printf("%s\n", history.command[i][j]);
+            j++;
+        }
+
+    }
 	return true;
 }
