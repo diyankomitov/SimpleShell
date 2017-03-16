@@ -8,6 +8,7 @@
 #define INPUT_LEN 512
 
 typedef struct {
+	bool isFull;
 	uint8_t num;
 	char* command[HIST_LEN][INPUT_LEN/2];
 } histList;

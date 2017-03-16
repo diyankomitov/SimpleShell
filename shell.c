@@ -25,7 +25,9 @@ void main(int argc, char * argv[])
 		
 		parse(input_tokens, input);
 		
-		if(input_tokens[0][0] != '!'){
+		if(input_tokens[0] == NULL) {
+		}
+		else if(input_tokens[0][0] != '!'){
 			//printf("presave\n");
 			save_to_history(input_tokens);
 			//printf("save\n");

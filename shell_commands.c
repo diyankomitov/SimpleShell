@@ -29,6 +29,7 @@ void save_env()
 void load_history()
 {
 	history.num = 0;
+	history.isFull = false;
 }
 
 bool exec_internal(char** token)
@@ -132,6 +133,10 @@ bool exit_shell(char** parameters)
 
 void save_to_history(char** input_tokens){
 	
+	if(history.command[HIST_LEN-1][0] != NULL)
+	{
+		history.isFull = true;
+	}
 	int i;
 	for (i = 0; input_tokens[i]!= NULL; i++){
 		history.command[history.num][i] = strdup(input_tokens[i]);
@@ -150,11 +155,11 @@ void load_from_history(char* input_tokens[])
 		return;
 	}
 
-	uint8_t number = history.num;
+	uint8_t number = history.num-1;
 
 	if (strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0)
 	{
-		number = history.num;
+		number = history.num-1;
 	}
 	else if (input_tokens[0][1] == '-')
 	{
@@ -164,14 +169,26 @@ void load_from_history(char* input_tokens[])
 
 		uint8_t tempnum = atoi(temp);
 
-		if (strlen(input_tokens[0]) > 4 || tempnum == 0 || (number - tempnum) < 1)
+		if (strlen(input_tokens[0]) > 4 || tempnum == 0 || HIST_LEN - tempnum <= 0)
 		{
 			printf("Error: Invalid history location given\n");
 			return;
 		}
 		else
 		{
-			number = number - tempnum;
+			if(history.isFull)
+			{
+				number = (number - tempnum) % HIST_LEN;
+				printf("%d\n", number);
+				if(number < 0)
+				{
+					number = number + HIST_LEN;
+				}
+			}
+			else
+			{
+				number = number - tempnum;
+			}
 			//printf("!- number: %d\n", number);
 		}
 	}
@@ -183,15 +200,21 @@ void load_from_history(char* input_tokens[])
 
 		uint8_t tempnum = atoi(temp);
 
-		if (strlen(input_tokens[0]) > 3 || tempnum == 0 || tempnum > number)
+		if (strlen(input_tokens[0]) > 3 || tempnum == 0 || tempnum > HIST_LEN || (history.isFull == false && tempnum > number+1))
 		{
 			printf("Error: Invalid history location given\n");
 			return;
 		}
 		else
 		{
-			number = tempnum;
-			//printf("! number: %d\n", number);
+			if(history.isFull)
+			{
+				number = (number + tempnum) % HIST_LEN;
+			}
+			else
+			{
+				number = tempnum-1;
+			}
 		}	
 	}
 	
@@ -205,19 +228,18 @@ void load_from_history(char* input_tokens[])
 
 bool print_history(char** parameters)
 {
-
 	uint8_t i = history.num;
 	uint8_t count = 0;
 	while(count < HIST_LEN)
     {
+    	printf("%d. ", count+1);
         uint8_t j = 0;
-       
         while (history.command[i][j] != NULL)
         {
-            printf("%d. %s\n", count, history.command[i][j]);
+            printf("%s ", history.command[i][j]);
             j++;
         }
-        
+        printf("\n");
         i = (i+1)%HIST_LEN;
         count++;
     }
