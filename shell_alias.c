@@ -53,7 +53,8 @@ bool add_alias(char** command)
 
 void print_aliases()
 {
-    for (uint8_t i = 0; i < ALIAS_LEN && aliases[i] != NULL; i++)
+    uint8_t i = 0;
+    for (; i < ALIAS_LEN && aliases[i] != NULL; i++)
     {
         printf("%s - ", aliases[i]->name);
         for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
@@ -62,6 +63,9 @@ void print_aliases()
         }
         printf("\n");
     }
+
+    if (i == 0)
+        printf("Warning: no aliases yet!\n");
 }
 
 bool get_alias(char** command)
@@ -97,14 +101,10 @@ bool remove_alias(char** command)
     {
         if (strcmp(aliases[i]->name, command[1]) == 0)
         {
-            // i cointains the index whe need remove
-            printf("%d", count_aliases());
             for (uint8_t j = i+1; j < count_aliases(); j++)
                 aliases[j-1] = aliases[j];
 
-
             aliases[count_aliases() - 1] = NULL;
-
 
             return true;
         }
