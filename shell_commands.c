@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
-#include "shell_commands.h"
 
 char* env_save;
 histList history;

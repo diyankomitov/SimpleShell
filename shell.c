@@ -5,6 +5,7 @@
 #include <shell_commands.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <shell_alias.h>
 
 
 void main(int argc, char * argv[])
@@ -14,7 +15,7 @@ void main(int argc, char * argv[])
 	load_history();
 	char input[INPUT_LEN+1];	
 	char* input_tokens[INPUT_LEN/2] = { NULL };
-	
+
 	while(1)
     {
 		printf("> ");
