@@ -219,19 +219,14 @@ bool load_from_history(char* input_tokens[])
 				number = (history.isFull)? (number + tempnum) % HIST_LEN : tempnum-1;
 		}
 	
-
-		if (history.command[number]!= NULL){		
-			int i;
-			for (i = 0; history.command[number][i]!= NULL; i++){
-				input_tokens[i] = history.command[number][i];
-			}
-			input_tokens[i] = NULL;
-			return true;
+	
+		int i;
+		for (i = 0; history.command[number][i]!= NULL; i++){
+			input_tokens[i] = history.command[number][i];
 		}
-		else{
-			printf("Error: Invalid history location given\n");
-			return false;
-		}
+		input_tokens[i] = NULL;
+		return true;
+		
 	}
 }
 
@@ -239,18 +234,35 @@ bool print_history(char** parameters)
 {
 	uint8_t i = history.num;
 	uint8_t count = 0;
-	while(count < HIST_LEN)
-    {
-    	printf("%d. ", count+1);
-        uint8_t j = 0;
-        while (history.command[i][j] != NULL)
-        {
-            printf("%s ", history.command[i][j]);
-            j++;
-        }
-        printf("\n");
-        i = (i+1)%HIST_LEN;
-        count++;
-    }
-	return true;
+	uint8_t j = 0;
+	if(history.isFull){
+		while(count < HIST_LEN)
+		{		
+			printf("%d. ", count+1);
+			
+			
+			while (history.command[i][j] != NULL)
+			{
+			    printf("%s ", history.command[i][j]);
+			    j++;
+			}
+			printf("\n");
+			i = (i+1)%HIST_LEN;
+			count++;
+			j = 0;
+		}
+	}
+	else{
+		for(count = 0; count<5; count++){
+			printf("%d. ", count+1);
+			while (history.command[count][j] != NULL)
+			{
+			    printf("%s ", history.command[count][j]);
+			    j++;
+			}
+			printf("\n");
+			j =0;
+		}
+	}
+	return true;		
 }
