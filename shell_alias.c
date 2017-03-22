@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <shell_commands.h>
+#include <shell_input.h>
 
 #define ALIAS_LEN 10
 
@@ -61,5 +62,20 @@ void print_aliases()
         }
         printf("\n");
     }
+}
+
+void get_alias(char* alias_name, char** result)
+{
+    for (uint8_t i = 0; i < ALIAS_LEN && aliases[i] != NULL; i++)
+        if (strcmp(aliases[i]->name, alias_name) == 0)
+        {
+            for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
+                result[j] = aliases[i]->command[j];
+
+            return;
+        }
+
+    for (uint16_t i = 0; i < INPUT_LEN/2; i++)
+        result[i] = NULL;
 }
 
