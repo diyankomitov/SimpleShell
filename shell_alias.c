@@ -50,3 +50,16 @@ void add_alias(char* alias_name, char** command)
     }
 }
 
+void print_aliases()
+{
+    for (uint8_t i = 0; i < ALIAS_LEN && aliases[i] != NULL; i++)
+    {
+        printf("%s - ", aliases[i]->name);
+        for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
+        {
+            printf("%s ", aliases[i]->command[j]);
+        }
+        printf("\n");
+    }
+}
+
