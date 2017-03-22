@@ -14,7 +14,7 @@ void main(int argc, char * argv[])
 	load_history();
 	char input[INPUT_LEN+1];	
 	char* input_tokens[INPUT_LEN/2] = { NULL };
-
+	
 	while(1)
     {
 		printf("> ");
@@ -24,7 +24,7 @@ void main(int argc, char * argv[])
 		memset(input_tokens, 0, (INPUT_LEN/2));
 		
 		parse(input_tokens, input);
-		
+		bool run_hist = true;
 		if(input_tokens[0] == NULL) {
 		}
 		else if(input_tokens[0][0] != '!'){
@@ -33,11 +33,13 @@ void main(int argc, char * argv[])
 			//printf("save\n");
 		}
 		else {
-			load_from_history(input_tokens);
+			run_hist = load_from_history(input_tokens);
 			//printf("%s\n", input_tokens[0]);
 		}
-		bool isSuccess = exec_internal(input_tokens);
-        if (!isSuccess)
-            exec_external(input_tokens);
+		if (run_hist){
+			bool isSuccess = exec_internal(input_tokens);
+        	if (!isSuccess)
+            	exec_external(input_tokens);
+		}
 	}
 }

@@ -33,6 +33,6 @@ bool exit_shell(char** parameters);
 bool get_path(char** parameters);
 bool set_path(char** parameters);
 void save_to_history(char** input_tokens);
-void load_from_history(char** input_tokens);
+bool load_from_history(char** input_tokens);
 bool print_history(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H

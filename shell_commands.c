@@ -132,11 +132,6 @@ bool exit_shell(char** parameters)
 }
 
 void save_to_history(char** input_tokens){
-	
-	if(history.command[HIST_LEN-1][0] != NULL)
-	{
-		history.isFull = true;
-	}
 	int i;
 	for (i = 0; input_tokens[i]!= NULL; i++){
 		history.command[history.num][i] = strdup(input_tokens[i]);
@@ -145,85 +140,108 @@ void save_to_history(char** input_tokens){
 	history.command[history.num][i] = NULL;
 	history.num = history.num = (history.num + 1)% HIST_LEN;
 	printf("history.num on save: %d\n", history.num);
+	if(history.num == 0)
+	{
+		history.isFull = true;
+	}
 } 
 
-void load_from_history(char* input_tokens[])
+bool load_from_history(char* input_tokens[])
 {
-	if(input_tokens[1] != NULL)
-	{
-		printf("Error: invocation from history can't have any arguments\n");
-		return;
+	if (history.command[0][0] == NULL){
+		printf("Error: History is empty\n");
+		return false;
 	}
-
-	uint8_t number = history.num-1;
-
-	if (strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0)
-	{
-		number = history.num-1;
-	}
-	else if (input_tokens[0][1] == '-')
-	{
-		char temp[3];
-		memcpy(temp, &input_tokens[0][2], 2);
-		temp[3] = '\0';
-
-		uint8_t tempnum = atoi(temp);
-
-		if (strlen(input_tokens[0]) > 4 || tempnum == 0 || HIST_LEN - tempnum <= 0)
+	else{
+		if(input_tokens[1] != NULL)
 		{
-			printf("Error: Invalid history location given\n");
-			return;
+			printf("Error: invocation from history can't have any arguments\n");
+			return false;
 		}
-		else
-		{
-			if(history.isFull)
-			{
-				number = (number - tempnum) % HIST_LEN;
-				printf("%d\n", number);
-				if(number < 0)
-				{
-					number = number + HIST_LEN;
-				}
-			}
-			else
-			{
-				number = number - tempnum;
-			}
-			//printf("!- number: %d\n", number);
-		}
-	}
-	else
-	{
-		char temp[3];
-		memcpy(temp, &input_tokens[0][1], 2);
-		temp[3] = '\0';
 
-		uint8_t tempnum = atoi(temp);
-
-		if (strlen(input_tokens[0]) > 3 || tempnum == 0 || tempnum > HIST_LEN || (history.isFull == false && tempnum > number+1))
-		{
-			printf("Error: Invalid history location given\n");
-			return;
-		}
-		else
-		{
-			if(history.isFull)
-			{
-				number = (number + tempnum) % HIST_LEN;
-			}
-			else
-			{
-				number = tempnum-1;
-			}
-		}	
-	}
+		int8_t number = history.num-1;
 	
-	//printf("%s\n", history->command[number][0]);
-	int i;
-	for (i = 0; history.command[number][i]!= NULL; i++){
-		input_tokens[i] = history.command[number][i];
+		if (strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0)
+		{
+			number = history.num-1;
+		}
+		else if (input_tokens[0][1] == '-')
+		{
+			char temp[3];
+			memcpy(temp, &input_tokens[0][2], 2);
+			temp[3] = '\0';
+
+			uint8_t tempnum = atoi(temp);
+
+			if (strlen(input_tokens[0]) > 4 || tempnum == 0 || HIST_LEN - tempnum <= 0)
+			{
+				printf("Error: Invalid history location given\n");
+				return false;
+			}
+			else
+			{
+				if(history.isFull)
+				{
+					number = number  - tempnum;
+					
+					if(number > (tempnum *-1 ))
+					{
+						number = HIST_LEN + number;
+					}
+				}
+				else
+				{
+					if(tempnum<=number){
+					number = number - tempnum;
+					}
+					else{
+						printf("Error: invalid history location given\n");
+						return false;
+					}
+				}
+				//printf("!- number: %d\n", number);
+			}
+		}
+		else
+		{
+			char temp[3];
+			memcpy(temp, &input_tokens[0][1], 2);
+			temp[3] = '\0';
+
+			uint8_t tempnum = atoi(temp);
+
+			if (strlen(input_tokens[0]) > 3 || tempnum == 0 || tempnum > HIST_LEN || (history.isFull == false && tempnum > number+1))
+			{
+				printf("Error: Invalid history location given\n");
+				return false;
+			}
+			else
+			{
+				if(history.isFull)
+				{
+					number = (number + tempnum) % HIST_LEN;
+				}
+				else
+				{
+					number = tempnum-1;
+				}
+			}	
+		}
+	
+
+		if (history.command[number]!= NULL){		
+			int i;
+			for (i = 0; history.command[number][i]!= NULL; i++){
+				input_tokens[i] = history.command[number][i];
+			}
+			input_tokens[i] = NULL;
+			return true;
+		}
+		else{
+			printf("Error: Invalid history location given\n");
+			return false;
+		}
 	}
-	input_tokens[i] = NULL;
 }
 
 bool print_history(char** parameters)
