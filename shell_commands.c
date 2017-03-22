@@ -188,6 +188,7 @@ bool load_from_history(char* input_tokens[])
 					{
 						number = HIST_LEN + number;
 					}
+					
 				}
 				else
 				{
@@ -262,7 +263,7 @@ bool print_history(char** parameters)
 		}
 	}
 	else{
-		for(count = 0; count<5; count++){
+		for(count = 0; count<history.num; count++){
 			printf("%d. ", count+1);
 			while (history.command[count][j] != NULL)
 			{
