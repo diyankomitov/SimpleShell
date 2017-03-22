@@ -5,6 +5,7 @@
 #include <shell_commands.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <shell_alias.h>
 
 
 void main(int argc, char * argv[])
@@ -14,7 +15,7 @@ void main(int argc, char * argv[])
 	load_history();
 	char input[INPUT_LEN+1];	
 	char* input_tokens[INPUT_LEN/2] = { NULL };
-	
+
 	while(1)
     {
 		printf("> ");
@@ -36,7 +37,9 @@ void main(int argc, char * argv[])
 			run_hist = load_from_history(input_tokens);
 			//printf("%s\n", input_tokens[0]);
 		}
-		if (run_hist){
+		if (run_hist)
+		{
+			get_alias(input_tokens);
 			bool isSuccess = exec_internal(input_tokens);
         	if (!isSuccess)
             	exec_external(input_tokens);

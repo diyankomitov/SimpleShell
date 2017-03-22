@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#define COMMAND_AMMOUNT 5
+
+#define COMMAND_AMMOUNT 7
 #define HIST_LEN 20
 #define INPUT_LEN 512
 #define HIST_LOC ".hist_list"
@@ -27,6 +28,7 @@ const command_map commands[COMMAND_AMMOUNT];
 
 void save_env();
 void load_history();
+void save_history();
 bool exec_internal(char** token);
 bool exec_external(char** tokenized_command);
 bool cd(char** parameters);
@@ -36,4 +38,5 @@ bool set_path(char** parameters);
 void save_to_history(char** input_tokens);
 bool load_from_history(char** input_tokens);
 bool print_history(char** parameters);
+bool alias(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H
