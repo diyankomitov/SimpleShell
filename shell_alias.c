@@ -66,7 +66,7 @@ void print_aliases()
 
 void get_alias(char* alias_name, char** result)
 {
-    for (uint8_t i = 0; i < ALIAS_LEN && aliases[i] != NULL; i++)
+    for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
         if (strcmp(aliases[i]->name, alias_name) == 0)
         {
             for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
@@ -77,5 +77,28 @@ void get_alias(char* alias_name, char** result)
 
     for (uint16_t i = 0; i < INPUT_LEN/2; i++)
         result[i] = NULL;
+}
+
+void remove_alias(char* alias_name)
+{
+    // 0 1 2 3 4 5 6 7 8 9
+
+    for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
+    {
+        if (strcmp(aliases[i]->name, alias_name) == 0)
+        {
+            // i cointains the index whe need remove
+            printf("%d", count_aliases());
+            for (uint8_t j = i+1; j < count_aliases(); j++)
+                aliases[j-1] = aliases[j];
+
+
+            aliases[count_aliases() - 1] = NULL;
+
+
+            return;
+        }
+    }
+
 }
 
