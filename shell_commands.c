@@ -216,16 +216,7 @@ bool load_from_history(char* input_tokens[])
 				return false;
 			}
 			else
-			{
-				if(history.isFull)
-				{
-					number = (number + tempnum) % HIST_LEN;
-				}
-				else
-				{
-					number = tempnum-1;
-				}
-			}	
+				number = (history.isFull)? (number + tempnum) % HIST_LEN : tempnum-1;
 		}
 	
 
