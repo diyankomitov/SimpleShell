@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #define COMMAND_AMMOUNT 5
-#define HIST_LEN 5
+#define HIST_LEN 20
 #define INPUT_LEN 512
+#define HIST_LOC ".hist_list"
 
 typedef struct {
 	bool isFull;
