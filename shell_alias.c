@@ -69,8 +69,19 @@ bool get_alias(char** command)
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
         if (strcmp(aliases[i]->name, command[0]) == 0)
         {
-            for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
+            char** temp;
+            for(uint8_t j = 0; command[j] != NULL; j++)
+            {
+                temp = realloc(temp, sizeof(temp) + sizeof(command[j]));
+                temp[j] = command[j];
+            }
+
+            uint8_t j = 0;
+            for (; aliases[i]->command[j] != NULL; j++)
                 command[j] = aliases[i]->command[j];
+
+            for(uint8_t k = 1; temp[k] != NULL; k++)
+                command[j+(k-1)] = temp[k];
 
             return true;
         }
