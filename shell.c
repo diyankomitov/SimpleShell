@@ -26,23 +26,24 @@ void main(int argc, char * argv[])
 		
 		parse(input_tokens, input);
 		bool run_hist = true;
-		if(input_tokens[0] == NULL) {
-		}
-		else if(input_tokens[0][0] != '!'){
-			//printf("presave\n");
-			save_to_history(input_tokens);
-			//printf("save\n");
-		}
-		else {
-			run_hist = load_from_history(input_tokens);
-			//printf("%s\n", input_tokens[0]);
-		}
-		if (run_hist)
+		if(input_tokens[0] != NULL)
 		{
-			get_alias(input_tokens);
-			bool isSuccess = exec_internal(input_tokens);
-        	if (!isSuccess)
-            	exec_external(input_tokens);
+			if(input_tokens[0][0] != '!')
+			{
+				save_to_history(input_tokens);
+				get_alias(input_tokens);
+			}
+
+			if(input_tokens[0][0] == '!')
+				run_hist = load_from_history(input_tokens);
+
+
+			if (run_hist || input_tokens[0][0] != '!')
+			{
+				bool isSuccess = exec_internal(input_tokens);
+				if (!isSuccess)
+					exec_external(input_tokens);
+			}
 		}
 	}
 }
