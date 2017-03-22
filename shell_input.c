@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 void parse(char **output, char *input)
 {
@@ -24,4 +25,9 @@ void echo_input(char **input)
     {
         printf("'%s'\n", input[i]);
     }
+}
+
+bool is_history_command(char** command)
+{
+    return command[0][0] == '!';
 }
