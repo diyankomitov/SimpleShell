@@ -10,8 +10,8 @@
 
 uint8_t count_aliases();
 void print_aliases();
-void remove_alias(char* alias_name);
-void add_alias(char* alias_name, char** command);
+bool remove_alias(char** command);
+bool add_alias(char** command);
 void get_alias(char* alias_name, char** command);
 
 #endif //CS210_SEM2_SHELL_ALIAS_H

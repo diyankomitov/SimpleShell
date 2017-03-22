@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#define COMMAND_AMMOUNT 5
+#define COMMAND_AMMOUNT 7
 #define HIST_LEN 5
 #define INPUT_LEN 512
 
@@ -35,4 +35,5 @@ bool set_path(char** parameters);
 void save_to_history(char** input_tokens);
 bool load_from_history(char** input_tokens);
 bool print_history(char** parameters);
+bool alias(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H

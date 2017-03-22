@@ -29,26 +29,26 @@ uint8_t count_aliases()
     return count;
 }
 
-void add_alias(char* alias_name, char** command)
+bool add_alias(char** command)
 {
     uint8_t index = count_aliases();
     aliascontainer* temp_alias = malloc(sizeof(aliascontainer));
     if (index != 10)
     {
+        char *alias_name = command[1];
         temp_alias->name = strdup(alias_name);
-        uint8_t i = 0;
+        uint8_t i = 2;
         for (; command[i] != NULL; i++)
-            temp_alias->command[i] = strdup(command[i]);
+            temp_alias->command[i-2] = strdup(command[i]);
 
         temp_alias->command[i] = NULL;
 
         aliases[index] = temp_alias;
+
+        return true;
     }
     else
-    {
-        printf("Error: The aliasaes is full!\n");
-        return;
-    }
+        return false;
 }
 
 void print_aliases()
@@ -79,13 +79,13 @@ void get_alias(char* alias_name, char** result)
         result[i] = NULL;
 }
 
-void remove_alias(char* alias_name)
+bool remove_alias(char** command)
 {
     // 0 1 2 3 4 5 6 7 8 9
 
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
     {
-        if (strcmp(aliases[i]->name, alias_name) == 0)
+        if (strcmp(aliases[i]->name, command[1]) == 0)
         {
             // i cointains the index whe need remove
             printf("%d", count_aliases());
@@ -96,9 +96,11 @@ void remove_alias(char* alias_name)
             aliases[count_aliases() - 1] = NULL;
 
 
-            return;
+            return true;
         }
     }
+
+    return false;
 
 }
 

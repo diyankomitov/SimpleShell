@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
+#include <shell_alias.h>
+#include <shell_input.h>
 
 char* env_save;
 histList history;
@@ -18,7 +20,33 @@ const command_map commands[COMMAND_AMMOUNT] =
 	,{.name = "cd", .callback = &cd}
 	,{.name = "exit", .callback = &exit_shell}
 	,{.name = "history", .callback = &print_history}
+	,{.name = "alias", .callback = &alias}
+	,{.name = "unalias", .callback = &remove_alias}
+
 };
+
+bool alias(char** parameters)
+{
+	if (parameters[1] == NULL)
+	{
+		print_aliases();
+		return true;
+	}
+	else
+	{
+		if (parameters[2] != NULL)
+		{
+			if (!add_alias(parameters))
+				printf("Error: alias limit reached!\n");
+		}
+		else
+		{
+			printf("Error: command not specified for the alias\n");
+		}
+
+	}
+
+}
 
 void save_env()
 {
