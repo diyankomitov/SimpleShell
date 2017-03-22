@@ -183,12 +183,11 @@ bool load_from_history(char* input_tokens[])
 				if(history.isFull)
 				{
 					number = number  - tempnum;
-					
-					if(number > (tempnum *-1 ))
+					if(number < 0)
 					{
 						number = HIST_LEN + number;
 					}
-					
+
 				}
 				else
 				{
