@@ -64,19 +64,18 @@ void print_aliases()
     }
 }
 
-void get_alias(char* alias_name, char** result)
+bool get_alias(char** command)
 {
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
-        if (strcmp(aliases[i]->name, alias_name) == 0)
+        if (strcmp(aliases[i]->name, command[0]) == 0)
         {
             for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
-                result[j] = aliases[i]->command[j];
+                command[j] = aliases[i]->command[j];
 
-            return;
+            return true;
         }
 
-    for (uint16_t i = 0; i < INPUT_LEN/2; i++)
-        result[i] = NULL;
+    return false;
 }
 
 bool remove_alias(char** command)

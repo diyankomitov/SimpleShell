@@ -37,7 +37,9 @@ void main(int argc, char * argv[])
 			run_hist = load_from_history(input_tokens);
 			//printf("%s\n", input_tokens[0]);
 		}
-		if (run_hist){
+		if (run_hist)
+		{
+			get_alias(input_tokens);
 			bool isSuccess = exec_internal(input_tokens);
         	if (!isSuccess)
             	exec_external(input_tokens);
