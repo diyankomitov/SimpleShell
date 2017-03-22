@@ -43,6 +43,16 @@ bool add_alias(char** command)
 
         temp_alias->command[i] = NULL;
 
+        for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
+        {
+            if (strcmp(aliases[i]->name, temp_alias->name) == 0)
+            {
+                aliases[i] = temp_alias;
+                printf("%s: alias changed\n", temp_alias->name);
+                return true;
+            }
+        }
+
         aliases[index] = temp_alias;
 
         return true;
