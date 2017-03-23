@@ -83,7 +83,7 @@ bool get_alias(char** command)
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
         if (strcmp(aliases[i]->name, command[0]) == 0)
         {
-            char** temp;
+            char** temp = malloc(sizeof(command[0]));
             uint8_t j = 0;
             for(; command[j] != NULL; j++)
             {
@@ -113,6 +113,11 @@ bool get_alias(char** command)
 bool remove_alias(char** command)
 {
     // 0 1 2 3 4 5 6 7 8 9
+    if (command[1] == NULL)
+    {
+        printf("Error: Unalias requires parameters\n");
+        return false;
+    }
 
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
     {
@@ -127,6 +132,7 @@ bool remove_alias(char** command)
         }
     }
 
+    printf("%s: this alias does not exist\n", command[1]);
     return false;
 
 }
