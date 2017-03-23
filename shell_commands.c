@@ -338,9 +338,6 @@ bool print_history(char** parameters)
 				j = 0;
 			}
 		}
-		else if (history.command[1][0] == NULL && strcmp(history.command[0][0], "history") == 0){
-			printf("Error: History is empty\n");
-		}
 		else{
 			for(count = 0; count<history.num; count++){
 				printf("%d. ", count+1);
