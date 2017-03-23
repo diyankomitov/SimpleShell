@@ -38,14 +38,23 @@ bool alias(char** parameters)
 		if (parameters[2] != NULL)
 		{
 			if (!add_alias(parameters))
+			{
 				printf("Error: alias limit reached!\n");
+				return false;
+			}
+			else
+				return true;
+
 		}
 		else
 		{
 			printf("Error: command not specified for the alias\n");
+			return false;
 		}
 
 	}
+
+	return false;
 
 }
 
@@ -118,8 +127,7 @@ void save_history(){
 
 bool exec_internal(char** token)
 {
-	if (feof(stdin))
-		exit_shell(token);
+
 
 	if (token[0] != NULL)
     {

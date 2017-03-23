@@ -19,8 +19,10 @@ void main(int argc, char * argv[])
 	while(1)
     {
 		printf("> ");
- 
-		fgets(input, INPUT_LEN+2, stdin);
+        fgets(input, INPUT_LEN+2, stdin);
+
+        if (feof(stdin))
+            exit_shell(input_tokens);
 
 		memset(input_tokens, 0, (INPUT_LEN/2));
 		
