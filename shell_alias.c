@@ -33,9 +33,10 @@ void load_alias()
 			memset(input_tokens, 0, (INPUT_LEN/2));
 			parse(input_tokens, input);
 			add_alias(input_tokens);	
-		}			
+		}
+        fclose(ali);
 	}
-	fclose(ali);	
+
 }
 
 
