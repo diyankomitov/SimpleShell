@@ -317,37 +317,46 @@ bool load_from_history(char* input_tokens[])
 
 bool print_history(char** parameters)
 {
-	uint8_t i = history.num;
-	uint8_t count = 0;
-	uint8_t j = 0;
-	if(history.isFull){
-		while(count < HIST_LEN)
-		{		
-			printf("%d. ", count+1);
+	if (parameters[1] == NULL){
+		uint8_t i = history.num;
+		uint8_t count = 0;
+		uint8_t j = 0;
+		if(history.isFull){
+			while(count < HIST_LEN)
+			{		
+				printf("%d. ", count+1);
 			
 			
-			while (history.command[i][j] != NULL)
-			{
-			    printf("%s ", history.command[i][j]);
-			    j++;
+				while (history.command[i][j] != NULL)
+				{
+					printf("%s ", history.command[i][j]);
+					j++;
+				}
+				printf("\n");
+				i = (i+1)%HIST_LEN;
+				count++;
+				j = 0;
 			}
-			printf("\n");
-			i = (i+1)%HIST_LEN;
-			count++;
-			j = 0;
 		}
-	}
-	else{
-		for(count = 0; count<history.num; count++){
-			printf("%d. ", count+1);
-			while (history.command[count][j] != NULL)
-			{
-			    printf("%s ", history.command[count][j]);
-			    j++;
+		else if (history.command[1][0] == NULL && strcmp(history.command[0][0], "history") == 0){
+			printf("Error: History is empty\n");
+		}
+		else{
+			for(count = 0; count<history.num; count++){
+				printf("%d. ", count+1);
+				while (history.command[count][j] != NULL)
+				{
+					printf("%s ", history.command[count][j]);
+					j++;
+				}
+				printf("\n");
+				j =0;
 			}
-			printf("\n");
-			j =0;
 		}
+		return true;
 	}
-	return true;		
+	else {
+		printf("Error: history cannot take any arguments\n");
+		return false;
+	}	
 }
