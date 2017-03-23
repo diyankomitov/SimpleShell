@@ -52,11 +52,13 @@ bool alias(char** parameters)
 			return false;
 		}
 
-	}
+		}
 
 	return false;
 
 }
+
+
 
 void save_env()
 {
@@ -68,7 +70,7 @@ void load_history()
 	FILE *hist;
 	hist = fopen(HIST_LOC, "r");
 	if (hist == NULL){
-		printf("File not found, new history file will be created on close\n");
+		printf("History file not found, new history file will be created on close\n");
 		history.num = 0;
 		history.isFull = false;
 	}
@@ -100,6 +102,7 @@ void load_history()
 	}	
 }
 	
+
 
 
 void save_history(){
@@ -217,6 +220,7 @@ bool exit_shell(char** parameters)
 	}
 	chdir(getenv("HOME"));
 	save_history();
+	save_alias();
 	setenv("PATH", env_save, 1);
 	printf("%s\n", getenv("PATH"));
 	exit(0);

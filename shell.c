@@ -13,6 +13,7 @@ void main(int argc, char * argv[])
 	save_env();
 	chdir(getenv("HOME"));
 	load_history();
+	load_alias();
 	char input[INPUT_LEN+1];	
 	char* input_tokens[INPUT_LEN/2] = { NULL };
 
