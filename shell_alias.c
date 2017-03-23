@@ -71,16 +71,19 @@ uint8_t count_aliases()
 bool add_alias(char** command)
 {
     uint8_t index = count_aliases();
-    aliascontainer* temp_alias = malloc(sizeof(aliascontainer));
+    aliascontainer* temp_alias = malloc((sizeof(aliascontainer)+1));
     if (index != 10)
     {
+//        echo_input(command);
         char *alias_name = command[1];
         temp_alias->name = strdup(alias_name);
         uint8_t i = 2;
         for (; command[i] != NULL; i++)
+        {
             temp_alias->command[i-2] = strdup(command[i]);
+        }
 
-        temp_alias->command[i] = NULL;
+        temp_alias->command[i-2] = NULL;
 
         for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
         {
@@ -122,15 +125,11 @@ bool get_alias(char** command)
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
         if (strcmp(aliases[i]->name, command[0]) == 0)
         {
-            char** temp;
+            char** temp = malloc(sizeof(command[0])*INPUT_LEN/2);
             uint8_t j = 0;
             for(; command[j] != NULL; j++)
-            {
-                temp = realloc(temp, sizeof(temp) + sizeof(command[j]));
                 temp[j] = command[j];
-            }
 
-            temp = realloc(temp, sizeof(temp) + sizeof(command[j-1]));
             temp[j] = NULL;
 
             j = 0;
@@ -141,6 +140,7 @@ bool get_alias(char** command)
             for(; temp[k] != NULL; k++)
                 command[j+(k-1)] = temp[k];
 
+            free(temp);
             command[j+(k-1)] = NULL;
 
             return true;
@@ -152,6 +152,11 @@ bool get_alias(char** command)
 bool remove_alias(char** command)
 {
     // 0 1 2 3 4 5 6 7 8 9
+    if (command[1] == NULL)
+    {
+        printf("Error: Unalias requires parameters\n");
+        return false;
+    }
 
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
     {
@@ -166,6 +171,7 @@ bool remove_alias(char** command)
         }
     }
 
+    printf("%s: this alias does not exist\n", command[1]);
     return false;
 
 }
