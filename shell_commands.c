@@ -7,7 +7,9 @@
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
-#include "shell_commands.h"
+#include <shell_commands.h>
+#include <shell_alias.h>
+#include <shell_input.h>
 
 char* env_save;
 histList history;
@@ -19,7 +21,42 @@ const command_map commands[COMMAND_AMMOUNT] =
 	,{.name = "cd", .callback = &cd}
 	,{.name = "exit", .callback = &exit_shell}
 	,{.name = "history", .callback = &print_history}
+	,{.name = "alias", .callback = &alias}
+	,{.name = "unalias", .callback = &remove_alias}
+
 };
+
+bool alias(char** parameters)
+{
+	if (parameters[1] == NULL)
+	{
+		print_aliases();
+		return true;
+	}
+	else
+	{
+		if (parameters[2] != NULL)
+		{
+			if (!add_alias(parameters))
+			{
+				printf("Error: alias limit reached!\n");
+				return false;
+			}
+			else
+				return true;
+
+		}
+		else
+		{
+			printf("Error: command not specified for the alias\n");
+			return false;
+		}
+
+	}
+
+	return false;
+
+}
 
 void save_env()
 {
@@ -28,14 +65,69 @@ void save_env()
 
 void load_history()
 {
-	history.num = 0;
-	history.isFull = false;
+	FILE *hist;
+	hist = fopen(HIST_LOC, "r");
+	if (hist == NULL){
+		printf("File not found, new history file will be created on close\n");
+		history.num = 0;
+		history.isFull = false;
+	}
+	else{
+		char flush[2];
+		char hist_num[3];
+		fgets(hist_num, sizeof(hist_num), hist);
+		
+		char isFull[2];
+		fgets(isFull, sizeof(isFull), hist);
+		history.isFull = isFull[0] == '1'? true: false;
+		
+		int i = 0;
+		int j;
+		char input[INPUT_LEN+1];
+		char* input_tokens[INPUT_LEN/2] = { NULL };
+		fgets(flush, sizeof(flush), hist);
+		while(fgets(input, INPUT_LEN+2, hist)){
+			memset(input_tokens, 0, (INPUT_LEN/2));
+			parse(input_tokens, input);
+			save_to_history(input_tokens);
+			
+		}
+		if (history.isFull){
+			history.num = atoi(hist_num);
+		}
+		
+		fclose(hist);
+	}	
+}
+	
+
+
+void save_history(){
+	
+	FILE *hist;
+	hist = fopen(HIST_LOC, "w");
+	
+	fprintf(hist, "%u\n", history.num);
+	int isFull = history.isFull ? 1 : 0;
+	fprintf(hist, "%d\n", isFull);
+		int i = 0;
+		int j;
+		while(history.command[i][0] != NULL && i < HIST_LEN){
+			
+			j = 0;	
+			while(history.command[i][j] != NULL){
+				fprintf(hist, "%s ", history.command[i][j]);
+				j++;
+			}
+			fputs("\n", hist);
+			i++;
+	}
+	fclose(hist);
 }
 
 bool exec_internal(char** token)
 {
-	if (feof(stdin))
-		exit_shell(token);
+
 
 	if (token[0] != NULL)
     {
@@ -123,7 +215,8 @@ bool exit_shell(char** parameters)
 		printf("Error: exit shouldn't have arguments\n");
 		return false;
 	}
-
+	chdir(getenv("HOME"));
+	save_history();
 	setenv("PATH", env_save, 1);
 	printf("%s\n", getenv("PATH"));
 	exit(0);
@@ -139,7 +232,6 @@ void save_to_history(char** input_tokens){
 	
 	history.command[history.num][i] = NULL;
 	history.num = history.num = (history.num + 1)% HIST_LEN;
-	printf("history.num on save: %d\n", history.num);
 	if(history.num == 0)
 	{
 		history.isFull = true;
@@ -233,37 +325,43 @@ bool load_from_history(char* input_tokens[])
 
 bool print_history(char** parameters)
 {
-	uint8_t i = history.num;
-	uint8_t count = 0;
-	uint8_t j = 0;
-	if(history.isFull){
-		while(count < HIST_LEN)
-		{		
-			printf("%d. ", count+1);
+	if (parameters[1] == NULL){
+		uint8_t i = history.num;
+		uint8_t count = 0;
+		uint8_t j = 0;
+		if(history.isFull){
+			while(count < HIST_LEN)
+			{		
+				printf("%d. ", count+1);
 			
 			
-			while (history.command[i][j] != NULL)
-			{
-			    printf("%s ", history.command[i][j]);
-			    j++;
+				while (history.command[i][j] != NULL)
+				{
+					printf("%s ", history.command[i][j]);
+					j++;
+				}
+				printf("\n");
+				i = (i+1)%HIST_LEN;
+				count++;
+				j = 0;
 			}
-			printf("\n");
-			i = (i+1)%HIST_LEN;
-			count++;
-			j = 0;
 		}
-	}
-	else{
-		for(count = 0; count<history.num; count++){
-			printf("%d. ", count+1);
-			while (history.command[count][j] != NULL)
-			{
-			    printf("%s ", history.command[count][j]);
-			    j++;
+		else{
+			for(count = 0; count<history.num; count++){
+				printf("%d. ", count+1);
+				while (history.command[count][j] != NULL)
+				{
+					printf("%s ", history.command[count][j]);
+					j++;
+				}
+				printf("\n");
+				j =0;
 			}
-			printf("\n");
-			j =0;
 		}
+		return true;
 	}
-	return true;		
+	else {
+		printf("Error: history cannot take any arguments\n");
+		return false;
+	}	
 }
