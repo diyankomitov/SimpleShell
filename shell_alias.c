@@ -19,6 +19,45 @@ typedef struct
 
 aliascontainer* aliases[ALIAS_LEN];
 
+void load_alias()
+{	
+	FILE *ali;
+	ali = fopen(ALI_LOC, "r");
+	if (ali == NULL){
+		printf("Alias file not found, new alias file will be created on close\n");
+	}
+	else {	
+		char input[INPUT_LEN+1];
+		char* input_tokens[INPUT_LEN/2] = { NULL };
+		while(fgets(input, INPUT_LEN+2, ali)){
+			memset(input_tokens, 0, (INPUT_LEN/2));
+			parse(input_tokens, input);
+			add_alias(input_tokens);	
+		}			
+	}
+	fclose(ali);	
+}
+
+
+void save_alias()
+{
+	FILE *ali;
+	ali = fopen(ALI_LOC, "w");
+	int j;
+	
+	for (int i = 0; i < count_aliases(); i++){
+		fprintf(ali, "alias %s", aliases[i]->name);
+		j = 0;	
+		while(aliases[i]->command[j] != NULL){
+			fprintf(ali, " %s", aliases[i]->command[j]);
+			j++;
+		}
+		fputs("\n", ali);
+		
+	}
+	fclose(ali);
+}
+
 uint8_t count_aliases()
 {
     uint8_t count = 0;

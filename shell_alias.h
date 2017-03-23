@@ -8,10 +8,13 @@
 #include <shell_commands.h>
 #include <stdint.h>
 
+#define ALI_LOC ".aliases"
+
 uint8_t count_aliases();
 void print_aliases();
 bool remove_alias(char** command);
 bool add_alias(char** command);
 bool get_alias(char** command);
-
+void save_alias();
+void load_alias();
 #endif //CS210_SEM2_SHELL_ALIAS_H
