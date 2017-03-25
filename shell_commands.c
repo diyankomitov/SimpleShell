@@ -36,23 +36,13 @@ bool alias(char** parameters)
 	else
 	{
 		if (parameters[2] != NULL)
-		{
-			if (!add_alias(parameters))
-			{
-				printf("Error: alias limit reached!\n");
-				return false;
-			}
-			else
-				return true;
-
-		}
+            return add_alias(parameters);
 		else
 		{
 			printf("Error: command not specified for the alias\n");
 			return false;
 		}
-
-		}
+    }
 
 	return false;
 

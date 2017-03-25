@@ -72,36 +72,43 @@ uint8_t count_aliases()
 bool add_alias(char** command)
 {
     uint8_t index = count_aliases();
-    aliascontainer* temp_alias = malloc((sizeof(aliascontainer)+1));
-    if (index != 10)
+
+    if (index == 10)
     {
-//        echo_input(command);
-        char *alias_name = command[1];
-        temp_alias->name = strdup(alias_name);
-        uint8_t i = 2;
-        for (; command[i] != NULL; i++)
-        {
-            temp_alias->command[i-2] = strdup(command[i]);
-        }
-
-        temp_alias->command[i-2] = NULL;
-
-        for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
-        {
-            if (strcmp(aliases[i]->name, temp_alias->name) == 0)
-            {
-                aliases[i] = temp_alias;
-                printf("%s: alias changed\n", temp_alias->name);
-                return true;
-            }
-        }
-
-        aliases[index] = temp_alias;
-
-        return true;
-    }
-    else
+        printf("Warning: alias limit reached!\n");
         return false;
+    }
+
+    if (is_creates_alias_cycle(command))
+    {
+        printf("Error: alias would create a cycle!\n");
+        return false;
+    }
+
+    aliascontainer* temp_alias = malloc((sizeof(aliascontainer)+1));
+    char *alias_name = command[1];
+    temp_alias->name = strdup(alias_name);
+    uint8_t i = 2;
+    for (; command[i] != NULL; i++)
+    {
+        temp_alias->command[i-2] = strdup(command[i]);
+    }
+
+    temp_alias->command[i-2] = NULL;
+
+    for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
+    {
+        if (strcmp(aliases[i]->name, temp_alias->name) == 0)
+        {
+            aliases[i] = temp_alias;
+            printf("%s: alias changed\n", temp_alias->name);
+            return true;
+        }
+    }
+
+    aliases[index] = temp_alias;
+
+    return true;
 }
 
 void print_aliases()
@@ -144,6 +151,7 @@ bool get_alias(char** command)
             free(temp);
             command[j+(k-1)] = NULL;
 
+            get_alias(command);
             return true;
         }
 
@@ -177,3 +185,12 @@ bool remove_alias(char** command)
 
 }
 
+bool is_creates_alias_cycle(char** command)
+{
+    char** temp = malloc(sizeof(command[0])*INPUT_LEN/2);
+    temp[0] = command[2];
+
+    get_alias(temp);
+
+    return (strcmp(temp[0], command[1]) == 0);
+}
