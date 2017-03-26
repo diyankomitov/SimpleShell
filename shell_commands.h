@@ -46,36 +46,50 @@ void save_history();
 
 /*
 Checks if input matches an internal command and if it does it calls the related function
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool exec_internal(char** token);
 
 /*
 Runs the input as an external command
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool exec_external(char** tokenized_command);
 
 /*
 Changes the current directory to the given path
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool cd(char** parameters);
 
 /*
 Handles exiting the shell: resets the path and saves the history and the aliases
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool exit_shell(char** parameters);
 
 /*
 Displays the current path
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool get_path(char** parameters);
 
 /*
 Sets the current path
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool set_path(char** parameters);
 
 /*
 Adds the entered command to the history
+Parameters:
+Tokenised input (Array of Strings)
 */
 void save_to_history(char** input_tokens);
 
@@ -85,16 +99,22 @@ Command called depends on whether it is of the form
 !n: calls command at the nth position in history
 !!: calls the last entered command
 !-n: calls the command at the current place in history - n
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool load_from_history(char** input_tokens);
 
 /*
 Displays the current contents of history in an ordered list from 1 to however items are in history (Max 20)
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool print_history(char** parameters);
 
 /*
 Determines whether a new alias is to be set or the current aliases are to be printed
+Parameters:
+Tokenised input (Array of Strings)
 */
 bool alias(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H
