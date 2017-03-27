@@ -73,8 +73,8 @@ void load_history()
 		fgets(isFull, sizeof(isFull), hist);
 		history.isFull = isFull[0] == '1'? true: false;
 		
-		int i = 0;
-		int j;
+		uint8_t i = 0;
+		uint8_t j;
 		char input[INPUT_LEN+1];
 		char* input_tokens[INPUT_LEN/2] = { NULL };
 		fgets(flush, sizeof(flush), hist);
@@ -101,10 +101,10 @@ void save_history(){
 	hist = fopen(HIST_LOC, "w");
 	
 	fprintf(hist, "%u\n", history.num);
-	int isFull = history.isFull ? 1 : 0;
+	uint8_t isFull = history.isFull ? 1 : 0;
 	fprintf(hist, "%d\n", isFull);
-		int i = 0;
-		int j;
+		uint8_t i = 0;
+		uint8_t j;
 		while(history.command[i][0] != NULL && i < HIST_LEN){
 			
 			j = 0;	
@@ -210,6 +210,7 @@ bool exit_shell(char** parameters)
 	}
 	chdir(getenv("HOME"));
 	save_history();
+
 	save_aliases();
 	setenv("PATH", env_save, 1);
 	printf("%s\n", getenv("PATH"));
@@ -219,9 +220,9 @@ bool exit_shell(char** parameters)
 }
 
 void save_to_history(char** input_tokens){
-	int i;
+	uint8_t i;
 	for (i = 0; input_tokens[i]!= NULL; i++){
-		history.command[history.num][i] = strdup(input_tokens[i]);
+        history.command[history.num][i] = strdup(input_tokens[i]);
 	}
 	
 	history.command[history.num][i] = NULL;
@@ -307,7 +308,7 @@ bool load_from_history(char* input_tokens[])
 		}
 	
 	
-		int i;
+		uint8_t i;
 		for (i = 0; history.command[number][i]!= NULL; i++){
 			input_tokens[i] = history.command[number][i];
 		}

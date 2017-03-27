@@ -8,7 +8,14 @@
 #include <shell_commands.h>
 #include <stdint.h>
 
-#define ALI_LOC ".aliases"
+#define ALIAS_LEN 10
+#define ALIAS_LOC ".aliases"
+
+typedef struct
+{
+    char* name;
+    char* command[INPUT_LEN/2];
+} aliascontainer;
 
 uint8_t count_aliases();
 void print_aliases();
