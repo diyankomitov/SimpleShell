@@ -6,6 +6,7 @@
 #include <shell_alias.h>
 #include <shell_commands.h>
 #include <shell_input.h>
+#include <shell_history.h>
 
 void main(int argc, char * argv[])
 {

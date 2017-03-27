@@ -5,9 +5,7 @@
 #include <stdbool.h>
 
 #define COMMAND_AMOUNT 7
-#define HIST_LEN 20
 #define INPUT_LEN 512
-#define HIST_LOC ".hist_list"
 
 typedef bool (*command)(char** parameters);
 
@@ -18,13 +16,6 @@ typedef struct
 
 } command_map;
 
-typedef struct
-{
-	bool isFull;
-	uint8_t num;
-	char* command[HIST_LEN][INPUT_LEN/2];
-} histList;
-
 /*
  * Data structure containing possible input strings and the function which they link to
  */
@@ -34,16 +25,6 @@ const command_map commands[COMMAND_AMOUNT];
  * Function for current path to be saved
  */
 void save_env();
-
-/*
- * Loads the history of entered commands from a file, .hist_list. Will set to default values if no history is found
- */
-void load_history();
-
-/*
- * Saves the history of entered commands to a file, .hist_list
- */
-void save_history();
 
 /*
  * Checks if input matches an internal command and if it does it calls the related function
@@ -86,36 +67,4 @@ bool get_path(char** parameters);
  * Tokenised input (Array of Strings)
  */
 bool set_path(char** parameters);
-
-/*
- * Adds the entered command to the history
- * Parameters:
- * Tokenised input (Array of Strings)
- */
-void save_to_history(char** input_tokens);
-
-/*
- * Retrieves and calls commands from history.
- * Command called depends on whether it is of the form
- * !n: calls command at the nth position in history
- * !!: calls the last entered command
- * !-n: calls the command at the current place in history - n
- * Parameters:
- * Tokenised input (Array of Strings)
- */
-bool load_from_history(char** input_tokens);
-
-/*
- * Displays the current contents of history in an ordered list from 1 to however items are in history (Max 20)
- * Parameters:
- * Tokenised input (Array of Strings)
- */
-bool print_history(char** parameters);
-
-/*
- * Determines whether a new alias is to be set or the current aliases are to be printed
- * Parameters:
- * Tokenised input (Array of Strings)
- */
-bool alias(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H

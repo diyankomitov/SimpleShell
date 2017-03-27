@@ -183,3 +183,23 @@ bool is_creates_alias_cycle(char** command)
 
     return (strcmp(temp[0], command[1]) == 0);
 }
+
+bool alias(char** parameters)
+{
+    if (parameters[1] == NULL)
+    {
+        print_aliases();
+        return true;
+    }
+    else
+    {
+        if (parameters[2] != NULL)
+            return add_alias(parameters);
+        else
+        {
+            printf("Error: command not specified for the alias\n");
+            return false;
+        }
+    }
+    return false;
+}
