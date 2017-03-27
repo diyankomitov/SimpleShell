@@ -67,4 +67,11 @@ bool get_path(char** parameters);
  * Tokenised input (Array of Strings)
  */
 bool set_path(char** parameters);
+
+/*
+ * Determines whether a new alias is to be set or the current aliases are to be printed
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
+bool alias(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H
