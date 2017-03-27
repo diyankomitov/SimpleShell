@@ -178,10 +178,10 @@ bool remove_alias(char** command)
 
 bool is_creates_alias_cycle(char** command)
 {
-    bool is_cycel = false;
+    bool is_cycle = false;
 
     if (strcmp(command[1], command[2]) == 0)
-        is_cycel = true;
+        is_cycle = true;
 
     char* temp[INPUT_LEN/2] = { NULL };
     char* temp2[INPUT_LEN/2] = { NULL };
@@ -190,15 +190,15 @@ bool is_creates_alias_cycle(char** command)
     get_alias(temp);
 
     if ((strcmp(temp[0], command[1]) == 0))
-        is_cycel = true;
+        is_cycle = true;
 
     temp[0] = command[1];
     temp2[0] = command[2];
 
 
     if (get_alias(temp) == true && get_alias(temp2) == true)
-        is_cycel = true;
+        is_cycle = true;
 
-    return is_cycel;
+    return is_cycle;
 }
 
