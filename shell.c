@@ -49,7 +49,7 @@ void main(int argc, char * argv[])
             if (is_history_command(input_tokens))
                 exec_command = load_from_history(input_tokens);
 
-			if (exec_command)
+			if (exec_command && input_tokens[0] != NULL)
 			{
                 get_alias(input_tokens);
 				if (!exec_internal(input_tokens))
