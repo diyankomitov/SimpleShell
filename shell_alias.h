@@ -26,10 +26,5 @@ void save_aliases();
 void load_aliases();
 bool is_creates_alias_cycle(char** command);
 
-/*
- * Determines whether a new alias is to be set or the current aliases are to be printed
- * Parameters:
- * Tokenised input (Array of Strings)
- */
-bool alias(char** parameters);
+
 #endif //CS210_SEM2_SHELL_ALIAS_H

@@ -90,7 +90,7 @@ bool load_from_history(char* input_tokens[])
 
 		int8_t number = history.num-1;
 	
-		if (!(strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0))
+		if (!(strcmp(input_tokens[0], "!!") == 0 || strcmp(input_tokens[0], "!-0") == 0 || strcmp(input_tokens[0], "!0") == 0))
 		{
 			if (input_tokens[0][1] == '-')
 			{
@@ -168,9 +168,9 @@ bool print_history(char** parameters)
 
 		if(history.isFull){
 			for(; count < HIST_LEN; count++)
-			{		
+			{
 				printf("%d. ", count+1);
-			
+
 				for(j = 0; history.command[i][j] != NULL; j++)
 					printf("%s ", history.command[i][j]);
 
@@ -191,5 +191,5 @@ bool print_history(char** parameters)
 			}
 		}
 		return true;
-	}	
+	}
 }

@@ -55,6 +55,13 @@ bool cd(char** parameters);
 bool exit_shell(char** parameters);
 
 /*
+ * Determines whether a new alias is to be set or the current aliases are to be printed
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
+bool alias(char** parameters);
+
+/*
  * Displays the current path
  * Parameters:
  * Tokenised input (Array of Strings)

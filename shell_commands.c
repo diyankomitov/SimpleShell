@@ -90,6 +90,7 @@ bool set_path(char** parameters)
 	setenv("PATH", parameters[1], 1);
 	return true;
 }
+
 bool cd(char** parameters)
 {
 	if (parameters[2] == NULL)
@@ -110,6 +111,25 @@ bool cd(char** parameters)
 	return true;
 }
 
+bool alias(char** parameters)
+{
+    if (parameters[1] == NULL)
+    {
+        print_aliases();
+        return true;
+    }
+    else
+    {
+        if (parameters[2] != NULL)
+            return add_alias(parameters);
+        else
+        {
+            printf("Error: command not specified for the alias\n");
+            return false;
+        }
+    }
+    return false;
+}
 
 bool exit_shell(char** parameters)
 {

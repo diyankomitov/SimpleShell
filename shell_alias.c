@@ -65,8 +65,10 @@ uint8_t count_aliases()
 bool add_alias(char** command)
 {
     uint8_t index = count_aliases();
+    char* temp[INPUT_LEN/2] = { NULL };
+    temp[0] = command[1];
 
-    if (index == ALIAS_LEN)
+    if (index == ALIAS_LEN && !get_alias(temp))
     {
         printf("Error: alias limit reached! Alias not added\n");
         return false;
@@ -176,30 +178,27 @@ bool remove_alias(char** command)
 
 bool is_creates_alias_cycle(char** command)
 {
-    char** temp = malloc(sizeof(command[0])*INPUT_LEN/2);
+    bool is_cycel = false;
+
+    if (strcmp(command[1], command[2]) == 0)
+        is_cycel = true;
+
+    char* temp[INPUT_LEN/2] = { NULL };
+    char* temp2[INPUT_LEN/2] = { NULL };
     temp[0] = command[2];
 
     get_alias(temp);
 
-    return (strcmp(temp[0], command[1]) == 0);
+    if ((strcmp(temp[0], command[1]) == 0))
+        is_cycel = true;
+
+    temp[0] = command[1];
+    temp2[0] = command[2];
+
+
+    if (get_alias(temp) == true && get_alias(temp2) == true)
+        is_cycel = true;
+
+    return is_cycel;
 }
 
-bool alias(char** parameters)
-{
-    if (parameters[1] == NULL)
-    {
-        print_aliases();
-        return true;
-    }
-    else
-    {
-        if (parameters[2] != NULL)
-            return add_alias(parameters);
-        else
-        {
-            printf("Error: command not specified for the alias\n");
-            return false;
-        }
-    }
-    return false;
-}
