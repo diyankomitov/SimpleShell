@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define COMMAND_AMMOUNT 7
+#define COMMAND_AMOUNT 7
 #define HIST_LEN 20
 #define INPUT_LEN 512
 #define HIST_LOC ".hist_list"
@@ -27,7 +27,7 @@ typedef struct {
 /*
 Data structure containing possible input strings and the function which they link to
 */
-const command_map commands[COMMAND_AMMOUNT];
+const command_map commands[COMMAND_AMOUNT];
 
 /*
 Function for current path to be saved

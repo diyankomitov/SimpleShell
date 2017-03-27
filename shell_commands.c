@@ -14,7 +14,7 @@
 char* env_save;
 histList history;
 
-const command_map commands[COMMAND_AMMOUNT] =
+const command_map commands[COMMAND_AMOUNT] =
 {
 	{.name = "getpath", .callback = &get_path}
 	,{.name = "setpath", .callback = &set_path}
@@ -124,7 +124,7 @@ bool exec_internal(char** token)
 
 	if (token[0] != NULL)
     {
-        for (uint8_t i = 0; i < COMMAND_AMMOUNT; i++)
+        for (uint8_t i = 0; i < COMMAND_AMOUNT; i++)
             if (strcmp(commands[i].name, token[0]) == 0)
             {
 				commands[i].callback(token);
@@ -210,7 +210,7 @@ bool exit_shell(char** parameters)
 	}
 	chdir(getenv("HOME"));
 	save_history();
-	save_alias();
+	save_aliases();
 	setenv("PATH", env_save, 1);
 	printf("%s\n", getenv("PATH"));
 	exit(0);

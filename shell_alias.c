@@ -19,44 +19,47 @@ typedef struct
 
 aliascontainer* aliases[ALIAS_LEN];
 
-void load_alias()
+void load_aliases()
 {	
-	FILE *ali;
-	ali = fopen(ALI_LOC, "r");
-	if (ali == NULL){
+	FILE *aliasfile;
+	aliasfile = fopen(ALI_LOC, "r");
+	if (aliasfile == NULL)
+    {
 		printf("Alias file not found, new alias file will be created on close\n");
 	}
-	else {	
+	else
+    {
 		char input[INPUT_LEN+1];
 		char* input_tokens[INPUT_LEN/2] = { NULL };
-		while(fgets(input, INPUT_LEN+2, ali)){
+		while(fgets(input, INPUT_LEN+2, aliasfile))
+        {
 			memset(input_tokens, 0, (INPUT_LEN/2));
 			parse(input_tokens, input);
 			add_alias(input_tokens);	
 		}
-        fclose(ali);
+        fclose(aliasfile);
 	}
-
 }
 
 
-void save_alias()
+void save_aliases()
 {
-	FILE *ali;
-	ali = fopen(ALI_LOC, "w");
+	FILE *aliasfile;
+	aliasfile = fopen(ALI_LOC, "w");
 	int j;
 	
-	for (int i = 0; i < count_aliases(); i++){
-		fprintf(ali, "alias %s", aliases[i]->name);
+	for (int i = 0; i < count_aliases(); i++)
+    {
+		fprintf(aliasfile, "alias %s", aliases[i]->name);
 		j = 0;	
-		while(aliases[i]->command[j] != NULL){
-			fprintf(ali, " %s", aliases[i]->command[j]);
+		while(aliases[i]->command[j] != NULL)
+        {
+			fprintf(aliasfile, " %s", aliases[i]->command[j]);
 			j++;
 		}
-		fputs("\n", ali);
-		
+		fputs("\n", aliasfile);
 	}
-	fclose(ali);
+	fclose(aliasfile);
 }
 
 uint8_t count_aliases()
