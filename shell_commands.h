@@ -4,39 +4,74 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define COMMAND_AMMOUNT 7
-#define HIST_LEN 20
+#define COMMAND_AMOUNT 7
 #define INPUT_LEN 512
-#define HIST_LOC ".hist_list"
-
-typedef struct {
-	bool isFull;
-	uint8_t num;
-	char* command[HIST_LEN][INPUT_LEN/2];
-} histList;
 
 typedef bool (*command)(char** parameters);
 
-typedef struct {
-
+typedef struct
+{
     char* name;
     command callback;
 
 } command_map;
 
-const command_map commands[COMMAND_AMMOUNT];
+/*
+ * Data structure containing possible input strings and the function which they link to
+ */
+const command_map commands[COMMAND_AMOUNT];
 
+/*
+ * Function for current path to be saved
+ */
 void save_env();
-void load_history();
-void save_history();
+
+/*
+ * Checks if input matches an internal command and if it does it calls the related function
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
 bool exec_internal(char** token);
+
+/*
+ * Runs the input as an external command
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
 bool exec_external(char** tokenized_command);
+
+/*
+ * Changes the current directory to the given path
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
 bool cd(char** parameters);
+
+/*
+ * Handles exiting the shell: resets the path and saves the history and the aliases
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
 bool exit_shell(char** parameters);
-bool get_path(char** parameters);
-bool set_path(char** parameters);
-void save_to_history(char** input_tokens);
-bool load_from_history(char** input_tokens);
-bool print_history(char** parameters);
+
+/*
+ * Determines whether a new alias is to be set or the current aliases are to be printed
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
 bool alias(char** parameters);
+
+/*
+ * Displays the current path
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
+bool get_path(char** parameters);
+
+/*
+ * Sets the current path
+ * Parameters:
+ * Tokenised input (Array of Strings)
+ */
+bool set_path(char** parameters);
 #endif //CS210_SEM2_SHELL_EXTERNAL_H

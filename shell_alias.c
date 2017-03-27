@@ -2,60 +2,54 @@
 // Created by cxb15176 on 22/03/17.
 //
 
-#include <shell_alias.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <shell_alias.h>
 #include <shell_commands.h>
 #include <shell_input.h>
 
-#define ALIAS_LEN 10
-
-typedef struct
-{
-    char* name;
-    char* command[INPUT_LEN/2];
-} aliascontainer;
-
 aliascontainer* aliases[ALIAS_LEN];
 
-void load_alias()
+void load_aliases()
 {	
-	FILE *ali;
-	ali = fopen(ALI_LOC, "r");
-	if (ali == NULL){
-		printf("Alias file not found, new alias file will be created on close\n");
+	FILE *aliasfile = fopen(ALIAS_LOC, "r");
+	if (aliasfile == NULL)
+    {
+		printf("Error: Alias file not found, new alias file will be created on exit\n");
 	}
-	else {	
+	else
+    {
 		char input[INPUT_LEN+1];
 		char* input_tokens[INPUT_LEN/2] = { NULL };
-		while(fgets(input, INPUT_LEN+2, ali)){
+
+		while(fgets(input, INPUT_LEN+2, aliasfile))
+        {
 			memset(input_tokens, 0, (INPUT_LEN/2));
 			parse(input_tokens, input);
-			add_alias(input_tokens);	
-		}			
+			add_alias(input_tokens);
+		}
+        fclose(aliasfile);
 	}
-	fclose(ali);	
 }
 
-
-void save_alias()
+void save_aliases()
 {
-	FILE *ali;
-	ali = fopen(ALI_LOC, "w");
-	int j;
-	
-	for (int i = 0; i < count_aliases(); i++){
-		fprintf(ali, "alias %s", aliases[i]->name);
+	FILE *aliasfile = fopen(ALIAS_LOC, "w");
+
+    uint8_t j;
+	for (uint8_t i = 0; i < count_aliases(); i++)
+    {
+		fprintf(aliasfile, "alias %s", aliases[i]->name);
 		j = 0;	
-		while(aliases[i]->command[j] != NULL){
-			fprintf(ali, " %s", aliases[i]->command[j]);
+		while(aliases[i]->command[j] != NULL)
+        {
+			fprintf(aliasfile, " %s", aliases[i]->command[j]);
 			j++;
 		}
-		fputs("\n", ali);
-		
+		fputs("\n", aliasfile);
 	}
-	fclose(ali);
+	fclose(aliasfile);
 }
 
 uint8_t count_aliases()
@@ -71,36 +65,43 @@ uint8_t count_aliases()
 bool add_alias(char** command)
 {
     uint8_t index = count_aliases();
-    aliascontainer* temp_alias = malloc((sizeof(aliascontainer)+1));
-    if (index != 10)
+    char* temp[INPUT_LEN/2] = { NULL };
+    temp[0] = command[1];
+
+    if (index == ALIAS_LEN && !get_alias(temp))
     {
-//        echo_input(command);
-        char *alias_name = command[1];
-        temp_alias->name = strdup(alias_name);
-        uint8_t i = 2;
-        for (; command[i] != NULL; i++)
-        {
-            temp_alias->command[i-2] = strdup(command[i]);
-        }
-
-        temp_alias->command[i-2] = NULL;
-
-        for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
-        {
-            if (strcmp(aliases[i]->name, temp_alias->name) == 0)
-            {
-                aliases[i] = temp_alias;
-                printf("%s: alias changed\n", temp_alias->name);
-                return true;
-            }
-        }
-
-        aliases[index] = temp_alias;
-
-        return true;
-    }
-    else
+        printf("Error: alias limit reached! Alias not added\n");
         return false;
+    }
+
+    if (is_creates_alias_cycle(command))
+    {
+        printf("Error: alias would create a cycle! Alias not added\n");
+        return false;
+    }
+
+    aliascontainer* new_alias = malloc((sizeof(aliascontainer)+1));
+    char *alias_name = command[1];
+    new_alias->name = strdup(alias_name);
+
+    uint8_t i = 2;
+    for (; command[i] != NULL; i++)
+        new_alias->command[i-2] = strdup(command[i]);
+
+    new_alias->command[i-2] = NULL;
+
+    for (i = 0; i < count_aliases() && aliases[i] != NULL; i++)
+    {
+        if (strcmp(aliases[i]->name, new_alias->name) == 0)
+        {
+            aliases[i] = new_alias;
+            printf("%s: alias changed\n", new_alias->name);
+            return true;
+        }
+    }
+
+    aliases[index] = new_alias;
+    return true;
 }
 
 void print_aliases()
@@ -109,10 +110,10 @@ void print_aliases()
     for (; i < ALIAS_LEN && aliases[i] != NULL; i++)
     {
         printf("%s - ", aliases[i]->name);
+
         for (uint8_t j = 0; aliases[i]->command[j] != NULL; j++)
-        {
             printf("%s ", aliases[i]->command[j]);
-        }
+
         printf("\n");
     }
 
@@ -123,6 +124,7 @@ void print_aliases()
 bool get_alias(char** command)
 {
     for (uint8_t i = 0; i < count_aliases() && aliases[i] != NULL; i++)
+    {
         if (strcmp(aliases[i]->name, command[0]) == 0)
         {
             char** temp = malloc(sizeof(command[0])*INPUT_LEN/2);
@@ -143,18 +145,18 @@ bool get_alias(char** command)
             free(temp);
             command[j+(k-1)] = NULL;
 
+            get_alias(command);
             return true;
         }
-
+    }
     return false;
 }
 
 bool remove_alias(char** command)
 {
-    // 0 1 2 3 4 5 6 7 8 9
     if (command[1] == NULL)
     {
-        printf("Error: Unalias requires parameters\n");
+        printf("Error: unalias requires parameters\n");
         return false;
     }
 
@@ -166,13 +168,37 @@ bool remove_alias(char** command)
                 aliases[j-1] = aliases[j];
 
             aliases[count_aliases() - 1] = NULL;
-
             return true;
         }
     }
 
     printf("%s: this alias does not exist\n", command[1]);
     return false;
+}
 
+bool is_creates_alias_cycle(char** command)
+{
+    bool is_cycle = false;
+
+    if (strcmp(command[1], command[2]) == 0)
+        is_cycle = true;
+
+    char* temp[INPUT_LEN/2] = { NULL };
+    char* temp2[INPUT_LEN/2] = { NULL };
+    temp[0] = command[2];
+
+    get_alias(temp);
+
+    if ((strcmp(temp[0], command[1]) == 0))
+        is_cycle = true;
+
+    temp[0] = command[1];
+    temp2[0] = command[2];
+
+
+    if (get_alias(temp) == true && get_alias(temp2) == true)
+        is_cycle = true;
+
+    return is_cycle;
 }
 

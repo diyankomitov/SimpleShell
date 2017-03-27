@@ -1,20 +1,20 @@
-#include <string.h>
-#include <stdio.h>
-#include <shell_input.h>
-#include <stdlib.h>
-#include <shell_commands.h>
-#include <unistd.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <shell_alias.h>
-
+#include <shell_commands.h>
+#include <shell_input.h>
+#include <shell_history.h>
 
 void main(int argc, char * argv[])
 {
 	save_env();
 	chdir(getenv("HOME"));
 	load_history();
-	load_alias();
-	char input[INPUT_LEN+1];	
+	load_aliases();
+	char input[INPUT_LEN+1];
 	char* input_tokens[INPUT_LEN/2] = { NULL };
 
 	while(1)
@@ -22,35 +22,42 @@ void main(int argc, char * argv[])
 		printf("> ");
         fgets(input, INPUT_LEN+2, stdin);
 
+		memset(input_tokens, 0, (INPUT_LEN/2));     // Clearing input_tokens
         if (feof(stdin))
             exit_shell(input_tokens);
 
-		memset(input_tokens, 0, (INPUT_LEN/2));
-		
 		parse(input_tokens, input);
-		bool run_hist = true;
+
 		if(input_tokens[0] != NULL)
 		{
-			if(input_tokens[0][0] != '!')
-			{
-				save_to_history(input_tokens);
-				get_alias(input_tokens);
-			}
+            char* temp_input_tokens[INPUT_LEN/2] = { NULL };
+            for (uint16_t i = 0; input_tokens[i] != NULL; i++)
+                temp_input_tokens[i] = strdup(input_tokens[i]);
 
-			if(input_tokens[0][0] == '!')
+            bool exec_command = true;
+            bool pre_saved = false;
+
+            if (strcmp(input_tokens[0], "history") == 0)
             {
-                run_hist = load_from_history(input_tokens);
-                get_alias(input_tokens);
+                save_to_history(input_tokens);
+                pre_saved = true;
             }
 
 
+            get_alias(input_tokens);
 
-			if (run_hist || input_tokens[0][0] != '!')
+            if (is_history_command(input_tokens))
+                exec_command = load_from_history(input_tokens);
+
+			if (exec_command && input_tokens[0] != NULL)
 			{
-				bool isSuccess = exec_internal(input_tokens);
-				if (!isSuccess)
+                get_alias(input_tokens);
+				if (!exec_internal(input_tokens))
 					exec_external(input_tokens);
 			}
+
+            if (temp_input_tokens[0][0] != '!' && !pre_saved)
+                save_to_history(temp_input_tokens);
 		}
 	}
 }
