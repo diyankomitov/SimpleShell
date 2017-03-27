@@ -22,8 +22,7 @@ void main(int argc, char * argv[])
 		printf("> ");
         fgets(input, INPUT_LEN+2, stdin);
 
-        memset(input_tokens, 0, (INPUT_LEN/2));     // Clearing input_tokens
-
+		memset(input_tokens, 0, (INPUT_LEN/2));     // Clearing input_tokens
         if (feof(stdin))
             exit_shell(input_tokens);
 

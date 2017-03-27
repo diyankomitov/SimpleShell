@@ -41,12 +41,9 @@ void load_history()
 		char hist_num[3];
 		fgets(hist_num, sizeof(hist_num), hist);
 		
-		char isFull[2];
+		char isFull[3];
 		fgets(isFull, sizeof(isFull), hist);
-		history.isFull = isFull[0];
-		
-		char flush[2];
-		fgets(flush, sizeof(flush), hist);
+		history.isFull = isFull[0] == '1' ? true : false;
 
 		char input[INPUT_LEN+1];
 		char* input_tokens[INPUT_LEN/2] = { NULL };
